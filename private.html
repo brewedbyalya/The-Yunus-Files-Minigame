@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>—</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink:        #1c1612;
+            --ink-mid:    #3a342c;
+            --ink-light:  #6b5c4e;
+            --ink-faint:  #9a8a7a;
+            --paper:      #e2d8c4;
+            --paper-off:  #d8ccb4;
+            --paper-warm: #ece2cc;
+            --rule:       #c0b09a;
+            --rule-light: #d0c4ae;
+            --accent:     #7a6248;
+            --accent-dk:  #5e4a34;
+            --red:        #6b2424;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--paper);
+            background-image:
+                radial-gradient(ellipse at 7%  12%, rgba(120,85,40,0.10) 0%, transparent 38%),
+                radial-gradient(ellipse at 91% 8%,  rgba(100,70,30,0.08) 0%, transparent 32%),
+                radial-gradient(ellipse at 18% 88%, rgba(110,80,35,0.09) 0%, transparent 36%),
+                radial-gradient(ellipse at 83% 78%, rgba(90,60,25,0.08)  0%, transparent 38%),
+                url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDAiIGhlaWdodD0iNDAwIj48ZmlsdGVyIGlkPSJncmFpbi1ib2R5Ij48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iMC42OCIgbnVtT2N0YXZlcz0iNCIgc3RpdGNoVGlsZXM9InN0aXRjaCIvPjxmZUNvbG9yTWF0cml4IHR5cGU9InNhdHVyYXRlIiB2YWx1ZXM9IjAiLz48L2ZpbHRlcj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgZmlsdGVyPSJ1cmwoI2dyYWluLWJvZHkpIiBvcGFjaXR5PSIwLjA2Ii8+PC9zdmc+");
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--ink);
+            padding: 3rem 1.25rem 5rem;
+            min-height: 100vh;
+        }
+
+        /* vignette */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 9999;
+            background: radial-gradient(ellipse at 50% 50%, transparent 58%, rgba(50,32,14,0.22) 100%);
+        }
+
+        .container { max-width: 700px; margin: 0 auto; }
+
+        /* ── PASSWORD SCREEN ── */
+        #password-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--paper);
+            background-image:
+                radial-gradient(ellipse at 50% 40%, rgba(140,100,50,0.06) 0%, transparent 60%),
+                url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDAiIGhlaWdodD0iNDAwIj48ZmlsdGVyIGlkPSJncmFpbi1ib2R5Ij48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iMC42OCIgbnVtT2N0YXZlcz0iNCIgc3RpdGNoVGlsZXM9InN0aXRjaCIvPjxmZUNvbG9yTWF0cml4IHR5cGU9InNhdHVyYXRlIiB2YWx1ZXM9IjAiLz48L2ZpbHRlcj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgZmlsdGVyPSJ1cmwoI2dyYWluLWJvZHkpIiBvcGFjaXR5PSIwLjA2Ii8+PC9zdmc+");
+            transition: opacity 0.6s ease;
+        }
+
+        #password-screen.hidden { opacity: 0; pointer-events: none; }
+
+        .pw-inner {
+            text-align: center;
+            padding: 2rem 1.5rem;
+            max-width: 340px;
+            width: 100%;
+        }
+
+        .pw-eyebrow {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.58rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+            margin-bottom: 0.6rem;
+        }
+
+        .pw-title {
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: var(--ink);
+            margin-bottom: 0.3rem;
+        }
+
+        .pw-sub {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.62rem;
+            color: var(--ink-faint);
+            letter-spacing: 0.04em;
+            margin-bottom: 2rem;
+            font-style: italic;
+        }
+
+        .pw-row {
+            display: flex;
+            gap: 0;
+            border: 1px solid var(--rule);
+            border-bottom: 2px solid var(--rule);
+            background: var(--paper-warm);
+            box-shadow: 2px 2px 0 rgba(0,0,0,0.05);
+        }
+
+        #pw-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--ink);
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 16px;
+            letter-spacing: 0.06em;
+            padding: 0.55rem 0.75rem;
+            outline: none;
+            min-width: 0;
+        }
+
+        #pw-input::placeholder { color: var(--ink-faint); font-style: italic; font-size: 0.75rem; }
+
+        #pw-submit {
+            background: var(--accent);
+            border: none;
+            border-left: 1px solid var(--rule);
+            color: var(--paper-warm);
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 0.55rem 1rem;
+            cursor: pointer;
+            transition: background 0.15s;
+            flex-shrink: 0;
+        }
+
+        #pw-submit:hover { background: var(--accent-dk); }
+
+        .pw-error {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.58rem;
+            color: var(--red);
+            letter-spacing: 0.06em;
+            margin-top: 0.6rem;
+            min-height: 1rem;
+        }
+
+        /* ── MAIN ── */
+        #main { display: none; }
+        #main.visible { display: block; }
+
+        /* ── PAGE HEADER ── */
+        .page-header {
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.25rem;
+            border-bottom: 2px solid var(--ink);
+            position: relative;
+        }
+
+        .page-header::after {
+            content: '';
+            display: block;
+            position: absolute;
+            bottom: -5px;
+            left: 0; right: 0;
+            height: 1px;
+            background: var(--rule);
+        }
+
+        .page-eyebrow {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.6rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+            margin-bottom: 0.5rem;
+        }
+
+        .page-title {
+            font-size: 1.65rem;
+            font-weight: 500;
+            color: var(--ink);
+            letter-spacing: -0.01em;
+            line-height: 1.2;
+        }
+
+        .page-sub {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--ink-light);
+            margin-top: 0.35rem;
+            font-style: italic;
+        }
+
+        /* ── DOCUMENTS ── */
+        .doc {
+            margin-bottom: 2rem;
+            opacity: 0;
+            transform: translateY(6px);
+            animation: fadein 0.4s ease forwards;
+        }
+
+        .doc:nth-child(1) { animation-delay: 0.05s; }
+        .doc:nth-child(2) { animation-delay: 0.2s; }
+        .doc:nth-child(3) { animation-delay: 0.35s; }
+        .doc:nth-child(4) { animation-delay: 0.5s; }
+
+        @keyframes fadein { to { opacity: 1; transform: translateY(0); } }
+
+        .doc-inner {
+            border: 1px solid var(--rule);
+            border-left: 3px solid var(--rule);
+            background: var(--paper-warm);
+            background-image:
+                repeating-linear-gradient(transparent, transparent 27px, rgba(180,160,120,0.1) 27px, rgba(180,160,120,0.1) 28px);
+            position: relative;
+            box-shadow: 2px 2px 0 rgba(0,0,0,0.05), inset 0 0 12px rgba(100,70,30,0.07);
+        }
+
+        /* folded corner */
+        .doc-inner::before {
+            content: '';
+            position: absolute;
+            top: 0; right: 0;
+            width: 0; height: 0;
+            border-style: solid;
+            border-width: 0 14px 14px 0;
+            border-color: transparent var(--paper) transparent transparent;
+            z-index: 2;
+        }
+
+        /* aged edge */
+        .doc-inner::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            box-shadow: inset 0 0 14px rgba(100,70,30,0.09);
+            z-index: 0;
+        }
+
+        /* type variants */
+        .doc-inner.type-dangerous {
+            border-left-color: var(--red);
+            background-color: #eee8d8;
+        }
+
+        .doc-inner.type-personal {
+            border-left: 26px solid var(--paper-off);
+            background-color: #f2ead8;
+            background-image:
+                repeating-linear-gradient(transparent, transparent 31px, rgba(160,130,90,0.13) 31px, rgba(160,130,90,0.13) 32px);
+        }
+
+        .doc-inner.type-personal .doc-header {
+            background: var(--paper-off);
+            border-bottom-color: var(--rule-light);
+            margin-left: -26px;
+            padding-left: calc(0.875rem + 26px);
+        }
+
+        .doc-inner.type-personal .doc-body { position: relative; }
+
+        /* red margin rule for personal */
+        .doc-inner.type-personal .doc-body::before {
+            content: '';
+            position: absolute;
+            left: -3px;
+            top: 0; bottom: 0;
+            width: 1px;
+            background: rgba(160,60,60,0.2);
+            pointer-events: none;
+        }
+
+        .doc-inner.type-notebook {
+            border-left-color: #c88040;
+            background-color: #f0ecd8;
+            background-image:
+                repeating-linear-gradient(rgba(160,140,100,0.1) 0px, transparent 1px, transparent 27px, rgba(160,140,100,0.1) 28px),
+                repeating-linear-gradient(90deg, rgba(160,140,100,0.06) 0px, transparent 1px, transparent 27px, rgba(160,140,100,0.06) 28px);
+        }
+
+        .doc-inner.type-notebook .doc-header { border-bottom-color: rgba(200,128,64,0.3); }
+        .doc-inner.type-notebook .doc-type { color: #c88040; }
+
+        .doc-inner.type-official {
+            border-left-color: var(--ink);
+            background-color: #edeae0;
+        }
+
+        .doc-inner.type-official .doc-header {
+            background: var(--ink);
+            border-bottom: none;
+        }
+
+        .doc-inner.type-official .doc-type { color: #c8b890; }
+        .doc-inner.type-official .doc-date { color: rgba(200,184,144,0.55); }
+
+        .doc-inner.type-official .doc-body {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.78rem;
+            line-height: 1.72;
+            color: var(--ink-mid);
+        }
+
+        .doc-header {
+            padding: 0.4rem 1.2rem 0.4rem 0.875rem;
+            background: var(--paper-off);
+            border-bottom: 1px solid var(--rule-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+            flex-wrap: wrap;
+            gap: 0.25rem;
+        }
+
+        .doc-type {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.58rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--accent);
+        }
+
+        .doc-type.red { color: var(--red); }
+
+        .doc-date {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.58rem;
+            color: var(--ink-faint);
+        }
+
+        .doc-body {
+            padding: 0.85rem 0.875rem 1rem;
+            font-size: 0.93rem;
+            line-height: 1.75;
+            color: var(--ink-mid);
+            position: relative;
+            z-index: 1;
+        }
+
+        .doc-body p { margin-bottom: 0.7rem; }
+        .doc-body p:last-child { margin-bottom: 0; }
+
+        .redacted {
+            background: var(--ink);
+            color: var(--ink);
+            padding: 0 4px;
+            cursor: default;
+            box-shadow: 1px 0 0 var(--ink), -1px 0 0 var(--ink);
+        }
+
+        .note {
+            background: linear-gradient(to right, rgba(180,155,110,0.1), transparent);
+            border-left: 2px solid var(--accent);
+            padding: 0.45rem 0.7rem;
+            margin-top: 0.85rem;
+            font-size: 0.85rem;
+            color: var(--ink-light);
+            font-style: italic;
+        }
+
+        .note.red {
+            border-left-color: var(--red);
+            color: var(--red);
+            background: linear-gradient(to right, rgba(107,36,36,0.07), transparent);
+        }
+
+        /* ── LIST (doc 4) ── */
+        .list-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0.6rem 0;
+        }
+
+        .list-table tr {
+            border-bottom: 1px solid rgba(180,160,120,0.18);
+        }
+
+        .list-table tr:last-child { border-bottom: none; }
+
+        .list-table td {
+            padding: 0.3rem 0.25rem;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.72rem;
+            color: var(--ink-mid);
+            vertical-align: middle;
+        }
+
+        .list-table td:first-child { width: 45%; }
+        .list-table td:nth-child(2) { width: 35%; color: var(--ink-faint); font-size: 0.65rem; }
+        .list-table td:last-child { width: 20%; text-align: right; }
+
+        .list-table tr.khalid-row {
+            background: rgba(107,36,36,0.06);
+        }
+
+        .list-table tr.khalid-row td { color: var(--red); }
+
+        .status-closed {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.58rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--red);
+        }
+
+        .status-open {
+            font-size: 0.58rem;
+            color: var(--ink-faint);
+        }
+
+        /* ── FOOTER ── */
+        .page-footer {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.58rem;
+            color: var(--ink-faint);
+            margin-top: 1.5rem;
+            text-align: right;
+            border-top: 1px solid var(--rule-light);
+            padding-top: 0.75rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        /* ── MOBILE ── */
+        @media (max-width: 600px) {
+            body { padding: 1.5rem 0.875rem 4rem; font-size: 15px; }
+            .page-title { font-size: 1.3rem; }
+            .doc-inner.type-personal { border-left-width: 18px; }
+            .doc-inner.type-personal .doc-header {
+                padding-left: calc(0.75rem + 18px);
+                margin-left: -18px;
+            }
+            .doc-body { font-size: 0.88rem; padding: 0.75rem 0.75rem 0.875rem; }
+            .list-table td { font-size: 0.65rem; }
+            .list-table td:nth-child(2) { font-size: 0.6rem; }
+            #pw-submit { padding: 0.55rem 0.75rem; font-size: 0.6rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- PASSWORD SCREEN -->
+<div id="password-screen">
+    <div class="pw-inner">
+        <div class="pw-eyebrow">restricted · private records</div>
+        <div class="pw-title">The Yunus Files</div>
+        <div class="pw-sub">compiler's private documents · not included in the file</div>
+        <div class="pw-row">
+            <input type="password" id="pw-input" placeholder="passphrase" autocomplete="off" spellcheck="false">
+            <button id="pw-submit">open</button>
+        </div>
+        <div class="pw-error" id="pw-error"></div>
+    </div>
+</div>
+
+<!-- MAIN -->
+<div id="main">
+<div class="container">
+
+    <div class="page-header">
+        <div class="page-eyebrow">compiler's private records · withheld from main file</div>
+        <div class="page-title">not for the file</div>
+        <div class="page-sub">things I couldn't put in. things I'm not ready to put in. things I don't know what to do with.</div>
+    </div>
+
+    <!-- DOC 1 — DANGEROUS -->
+    <div class="doc">
+        <div class="doc-inner type-dangerous">
+            <div class="doc-header">
+                <span class="doc-type red">withheld — too dangerous</span>
+                <span class="doc-date">20xx</span>
+            </div>
+            <div class="doc-body">
+                <p>I'm not putting this in the main file.</p>
+                <p>The handwriting on N's letters matches a sample I pulled from a 20xx procurement dispute filed through the <span class="redacted">Bureau of Internal Affairs</span>. The signature on that dispute is listed as a legal consultant attached to a private equity firm registered in <span class="redacted">redacted</span>. The firm dissolved in 20xx.</p>
+                <p>But the unmatched fingerprint on N's letters — the one that isn't Jalal's — I found it again. On a glass. At a function. I was close enough to shake hands.</p>
+                <p>If I'm wrong, writing this down is paranoia. If I'm right, writing this down is a death sentence.</p>
+                <div class="note red">※ If something happens to me: Look into Nessrine.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DOC 2 — PERSONAL -->
+    <div class="doc">
+        <div class="doc-inner type-personal">
+            <div class="doc-header">
+                <span class="doc-type">personal — withheld</span>
+                <span class="doc-date">undated</span>
+            </div>
+            <div class="doc-body">
+                <p>To whoever finds this.</p>
+                <p>My name is <span class="redacted">redacted</span>. I knew Khalid for years. I was at his wedding. I held Aatiq when he was three days old. By the time you're reading this, I've abandoned my identity.</p>
+                <p>On 19 March, I was working late. I heard Khalid on the phone at his desk, talking about checking out the unit. He was talking to someone he loved. I assume it was Jena.</p>
+                <p>I went home at 22:30. Forty minutes before the fire started. I've thought about that forty minutes every day since. If I had stayed. If I had followed him. If I had said something. Anything.</p>
+                <p>When Amal asked me to investigate, she didn't know how close I was.</p>
+                <p>If she knew, would she be mad?</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- DOC 3 — AATIQ -->
+    <div class="doc">
+        <div class="doc-inner type-notebook">
+            <div class="doc-header">
+                <span class="doc-type">withheld — aatiq</span>
+                <span class="doc-date">20xx</span>
+            </div>
+            <div class="doc-body">
+                <p>Imrik told me where Aatiq is. I'm not writing it here.</p>
+                <p>He's alive. He's not okay, but he's alive, and he's somewhere safe. That's what Imrik said.</p>
+                <p>The envelope. Khalid's envelope. Aatiq doesn't know it exists.</p>
+                <p>I don't know if giving it to him helps or destroys him. I don't know what's in it. I've been sitting with that question for a long time now. I've considered opening it myself, but... it didn't feel right to.</p>
+                <p>I think he deserves to decide for himself. But someone has to find him first, and I don't know if I'm the right person to do that.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- DOC 4 — JALAL'S LIST -->
+    <div class="doc">
+        <div class="doc-inner type-official">
+            <div class="doc-header">
+                <span class="doc-type">withheld — obtained document · rahimi</span>
+                <span class="doc-date">undated</span>
+            </div>
+            <div class="doc-body">
+                <p>This was in the desk he cleared himself when Aatiq left. I don't know how it ended up where I found it. I'm not going to explain how I found it.</p>
+                <p>It's a list. Twelve names. Some have dates next to them. Some have amounts. Three of them have a single word: closed.</p>
+                <p>Aatiq's name is not on it.</p>
+
+                <table class="list-table" id="nameList"></table>
+
+                <p>I don't know who the other eleven people are. I don't know if they're dead. I'm trying to find out.</p>
+                <p>I can't put this in the main file without being able to say what it is. I don't have enough yet.</p>
+                <div class="note red">※ I'm terrified of this piece of paper.</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-footer">private · compiler's records only · not for distribution</div>
+
+</div>
+</div>
+
+<script>
+    const PASSWORD = 'aizawa';
+
+    // ── Password ──
+    const pwInput  = document.getElementById('pw-input');
+    const pwSubmit = document.getElementById('pw-submit');
+    const pwError  = document.getElementById('pw-error');
+    const pwScreen = document.getElementById('password-screen');
+    const main     = document.getElementById('main');
+
+    function tryPassword() {
+        const val = pwInput.value.trim().toLowerCase();
+        if (val === PASSWORD) {
+            pwScreen.classList.add('hidden');
+            setTimeout(() => {
+                pwScreen.style.display = 'none';
+                main.classList.add('visible');
+            }, 650);
+        } else {
+            pwError.textContent = 'incorrect passphrase';
+            pwInput.value = '';
+            pwInput.focus();
+            pwInput.animate([
+                { transform: 'translateX(0)' },
+                { transform: 'translateX(6px)' },
+                { transform: 'translateX(-6px)' },
+                { transform: 'translateX(3px)' },
+                { transform: 'translateX(0)' },
+            ], { duration: 200, easing: 'ease-out' });
+        }
+    }
+
+    pwSubmit.addEventListener('click', tryPassword);
+    pwInput.addEventListener('keypress', e => { if (e.key === 'Enter') tryPassword(); });
+    pwInput.focus();
+
+    // ── Name list ──
+    // Seeded deterministic shuffle so names are always the same
+    function seededRand(seed) {
+        let s = seed;
+        return function() {
+            s = (s * 1664525 + 1013904223) & 0xffffffff;
+            return (s >>> 0) / 0xffffffff;
+        };
+    }
+
+    const rand = seededRand(0x4b68616c);
+
+    const firstNames = [
+        'Tariq','Nadia','Faris','Layla','Hamdan','Sana','Youssef','Reem',
+        'Bilal','Hessa','Majid','Dina','Ziyad','Maha','Walid','Rania',
+        'Samir','Aisha','Kareem','Lina'
+    ];
+    const lastNames = [
+        'Al-Rashidi','Mansouri','Qassim','Al-Ansari','Khalaf','Nasser',
+        'Al-Sulaiti','Hamdan','Mirza','Al-Dosari','Shaheen','Osman',
+        'Al-Zaabi','Bishara','Hakim','Al-Marri'
+    ];
+
+    function pickRand(arr) {
+        return arr[Math.floor(rand() * arr.length)];
+    }
+
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+    function randDate() {
+        const m = months[Math.floor(rand() * 12)];
+        const y = '20xx';
+        return `${m} ${y}`;
+    }
+
+    function randAmount() {
+        const amounts = ['—','—','—','—',
+            Math.floor(rand()*40+10)*1000,
+            Math.floor(rand()*80+20)*1000,
+        ];
+        const a = amounts[Math.floor(rand() * amounts.length)];
+        return typeof a === 'number' ? `${a.toLocaleString()} BHD` : '—';
+    }
+
+    // Build 12 rows: Khalid first (closed), then 2 more closed, then 9 open
+    const rows = [];
+
+    // Khalid — always row 1
+    rows.push({
+        name: 'YUNUS, Khalid R.',
+        date: '~3 days before fire',
+        amount: '—',
+        status: 'closed',
+        isKhalid: true
+    });
+
+    // 2 more closed
+    for (let i = 0; i < 2; i++) {
+        rows.push({
+            name: `${pickRand(lastNames).toUpperCase()}, ${pickRand(firstNames)}`,
+            date: randDate(),
+            amount: randAmount(),
+            status: 'closed',
+            isKhalid: false
+        });
+    }
+
+    // 9 open / unresolved
+    for (let i = 0; i < 9; i++) {
+        rows.push({
+            name: `${pickRand(lastNames).toUpperCase()}, ${pickRand(firstNames)}`,
+            date: randDate(),
+            amount: randAmount(),
+            status: '—',
+            isKhalid: false
+        });
+    }
+
+    // Render
+    const table = document.getElementById('nameList');
+    rows.forEach(row => {
+        const tr = document.createElement('tr');
+        if (row.isKhalid) tr.className = 'khalid-row';
+
+        const statusHtml = row.status === 'closed'
+            ? `<span class="status-closed">closed</span>`
+            : `<span class="status-open">—</span>`;
+
+        tr.innerHTML = `
+            <td>${row.name}</td>
+            <td>${row.date}</td>
+            <td>${statusHtml}</td>
+        `;
+        table.appendChild(tr);
+    });
+</script>
+</body>
+</html>

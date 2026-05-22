@@ -438,7 +438,6 @@
             );
             padding: 0.15rem 0.5rem 0.15rem 0;
         }
-        }
 
         blockquote {
             border-left: 2px solid var(--rule);
@@ -1343,17 +1342,39 @@
             .search-input { font-size: 16px; }
             .file-title { font-size: 0.98rem; }
             .file-body  { font-size: 0.88rem; }
-            #cork-header { height: auto; min-height: 44px; flex-wrap: wrap; padding: 0.4rem 0.75rem; gap: 0.35rem; }
+
+            /* Narrower label column on small screens */
+            .row { grid-template-columns: 78px 1fr; }
+            .label { font-size: 0.6rem; }
+
+            /* Cork header */
+            #cork-header { height: auto; min-height: 52px; flex-wrap: wrap; padding: 0.5rem 0.75rem; gap: 0.4rem; }
             #cork-hint { display: none; }
             #cork-controls { gap: 0.4rem; flex-wrap: wrap; justify-content: flex-end; }
-            .cork-ctrl-btn { font-size: 0.6rem; padding: 0.25rem 0.55rem; }
+            /* Larger tap targets on mobile */
+            .cork-ctrl-btn { font-size: 0.62rem; padding: 0.4rem 0.65rem; min-height: 36px; display: flex; align-items: center; }
             /* Bigger cards on mobile for easier tapping */
             .cork-card { width: 160px; }
             .cork-card-title { font-size: 0.8rem; padding: 0.4rem 0.6rem 0.55rem; }
             .cork-card-type { font-size: 0.58rem; }
+
+            /* Doc viewer slides up from bottom on mobile */
             #doc-viewer { align-items: flex-end; }
-            #doc-viewer-inner { width: 100%; max-height: 92vh; border-left: none; border-right: none; border-bottom: none; border-radius: 0; }
+            #doc-viewer-inner { width: 100%; max-height: 92vh; border-left: none; border-right: none; border-bottom: none; border-radius: 0; transform: none !important; }
+            #doc-viewer-title { font-size: 1rem; padding: 0.65rem 0.75rem 0.25rem; }
+            #doc-viewer-body { padding: 0.5rem 0.75rem 1rem; font-size: 0.88rem; }
+
+            /* Fix tpl-personal left border on mobile */
+            .tpl-personal { border-left-width: 18px !important; }
+            .tpl-personal #doc-viewer-header { padding-left: calc(0.75rem + 18px) !important; margin-left: -18px !important; }
+            .tpl-personal #doc-viewer-title { padding-left: calc(0.75rem + 18px) !important; margin-left: -18px !important; }
+            .tpl-personal #doc-viewer-body::before { left: calc(-18px + 0.75rem); }
+
+            /* Notepad */
             #notepad-inner { width: 100%; max-height: 90vh; }
+
+            /* Stats buttons */
+            .corkboard-btn { padding: 0.3rem 0.65rem; font-size: 0.62rem; min-height: 34px; }
         }
     </style>
 </head>
@@ -1361,7 +1382,7 @@
 <div class="container">
 
     <div class="header">
-        <div class="header-eyebrow">case file · port of hidd · bahrain</div>
+        <div class="header-eyebrow">case file · port of hiddan · bahrain</div>
         <div class="header-title">The Yunus Files</div>
         <div class="header-sub">compiled 20xx – 20xx · not for distribution</div>
 
@@ -1517,7 +1538,7 @@
                 <div class="tag">CID/IR-20xx-0419 · closed</div>
                 <div class="row"><span class="label">subject</span><span>YUNUS, Khalid Rashed — Detective, Grade III</span></div>
                 <div class="row"><span class="label">date</span><span>19 March 20xx, approx. 23:40</span></div>
-                <div class="row"><span class="label">location</span><span>Port of Hidd, Warehouse 7</span></div>
+                <div class="row"><span class="label">location</span><span>Port of Hiddan, Warehouse 7</span></div>
                 <div class="row"><span class="label">reporting</span><span>Capt. Jalal Rahimi</span></div>
                 <hr>
                 <p>Yunus was conducting an after-hours inspection of Warehouse 7 following an anonymous tip regarding irregular cargo activity. At 23:40, a fire ignited in stored industrial solvents. It spread quickly. Yunus reportedly re-entered the structure to rescue a trapped civilian worker. He didn't come out.</p>
@@ -1622,7 +1643,7 @@
             content: `
                 <div class="tag">unsent · found inside a desk journal</div>
                 <p><strong>To file —</strong></p>
-                <p>Khalid Yunus died in a fire at the Port of Hidd. That's the official record.</p>
+                <p>Khalid Yunus died in a fire at the Port of Hiddan. That's the official record.</p>
                 <p>The boy resigned and left the country. He's no longer a concern. The matter is closed.</p>
                 <p>— Rahimi</p>
                 <div class="note">※ I need to find Yunus.</div>
@@ -1673,7 +1694,7 @@
                 <div class="tag">three pages · partial arabic shorthand · condition: worn</div>
                 <blockquote>"Manifest 7C — numbers still don't add up. Six months of this. J. keeps saying it's clerical error. Third time I've raised it. No written response."</blockquote>
                 <hr>
-                <p><strong>Calendar entry, 19 March:</strong> <em>"Hidd, 23:00. Don't tell J."</em></p>
+                <p><strong>Calendar entry, 19 March:</strong> <em>"Hiddan, 23:00. Don't tell J."</em></p>
                 <hr>
                 <div class="note">※ There's a sealed envelope with it. 'For Aatiq. Open if something happens to me.' Still sealed. It's not my place to open it. I shoud've done more at the time. This is the least I could do... give the boy some privacy. </div>
                 <p>Also in the box: a worn ID lanyard belonging to Aatiq. A child's drawing in crayon, a bird and a man, labeled 'me' and 'baba.'</p>
@@ -1687,7 +1708,7 @@
             date: "20xx",
             keywords: ["manifest", "7c", "discrepancy", "hidd", "port", "shipment"],
             content: `
-                <div class="tag">port of hidd · customs logs · internal copy</div>
+                <div class="tag">port of hiddan · customs logs · internal copy</div>
                 <ul>
                     <li>12 Sep 20xx — −14 units unaccounted</li>
                     <li>03 Nov 20xx — −22 units unaccounted</li>
@@ -1766,7 +1787,7 @@
 
                         <!-- Night of 19 Mar cluster -->
                         <div style="font-family:'IBM Plex Mono',monospace;font-size:0.67rem;color:var(--red);padding:0.35rem 0.6rem 0.35rem 0;text-align:right;line-height:1.4;opacity:0.8;">19 Mar<br>23:15</div>
-                        <div style="padding:0.3rem 0 0.3rem 0.85rem;border-left:2px solid var(--red);opacity:0.85;font-size:0.88rem;line-height:1.55;color:var(--ink-mid);">According to Rahimi, Khalid calls him. Says he is already at Port of Hidd. Rahimi claims he told him to wait.</div>
+                        <div style="padding:0.3rem 0 0.3rem 0.85rem;border-left:2px solid var(--red);opacity:0.85;font-size:0.88rem;line-height:1.55;color:var(--ink-mid);">According to Rahimi, Khalid calls him. Says he is already at Port of Hiddan. Rahimi claims he told him to wait.</div>
 
                         <div style="font-family:'IBM Plex Mono',monospace;font-size:0.67rem;color:var(--red);padding:0.35rem 0.6rem 0.35rem 0;text-align:right;line-height:1.4;opacity:0.8;">19 Mar<br>23:40</div>
                         <div style="padding:0.3rem 0 0.3rem 0.85rem;border-left:2px solid var(--red);opacity:0.85;font-size:0.88rem;line-height:1.55;color:var(--ink-mid);">Fire reported at Warehouse 7.</div>
@@ -1860,7 +1881,7 @@
                 <div class="tag">Addressed to me.</div>
                 <div class="handwriting">
                 <p>My name is Amal Yunus. Pro hero, license number [redacted.] Hero name: Asfoorah. I am Khalid Yunus's daughter.</p>
-                <p>My father died in a fire at the Port of Hidd. The report says it was an accident. Something is wrong.</p>
+                <p>My father died in a fire at the Port of Hiddan. The report says it was an accident. Something is wrong.</p>
                 <p>Aatiq worked at the same precinct. After the funeral, he went quiet, wouldn't eat, wouldn't leave his room, wouldn't look at me. Then one day he was fine. Too fine. He said he was going to travel. That was the last I saw him properly.</p>
                 <p>I've been asking questions for years. Everyone tells me to let it go.</p>
                 <p>Please. Look at it properly.</p>
@@ -1886,14 +1907,14 @@
         // 18
         {
             id: "press_heroic",
-            title: "al-ayyam — 22 march 20xx",
+            title: "bh-bay daily — 22 march 20xx",
             type: "press clipping",
             date: "22 mar 20xx",
-            keywords: ["press", "newspaper", "heroic", "al-ayyam"],
+            keywords: ["press", "newspaper", "heroic", "bh-bay daily"],
             content: `
                 <div class="tag">front page · morning edition</div>
                 <p><strong>"Detective Killed in Port Fire Hailed as Hero"</strong></p>
-                <p>Detective Khalid Yunus died early Thursday after re-entering a burning Hidd warehouse to rescue a trapped port worker, officials confirmed. He was posthumously commended by the Minister of Interior at a brief ceremony that same afternoon.</p>
+                <p>Detective Khalid Yunus died early Thursday after re-entering a burning Hiddan warehouse to rescue a trapped port worker, officials confirmed. He was posthumously commended by the Minister of Interior at a brief ceremony that same afternoon.</p>
                 <p>Captain Jalal Rahimi, his commanding officer and close friend of twenty years, called him "an exemplary officer and an irreplaceable partner."</p>
                 <p>The fire's cause remains under review. No foul play is suspected.</p>
                 <div class="note">※ For the fire so big, there's not much articles written about it.</div>
@@ -1902,14 +1923,14 @@
         // 19
         {
             id: "press_asfoorah",
-            title: "gulf daily news — august 20xx",
+            title: "bh-bay daily — august 20xx",
             type: "press clipping",
             date: "aug 20xx",
             keywords: ["amal", "asfoorah", "port", "safety", "donation"],
             content: `
                 <div class="tag">hero & public affairs · page 4</div>
                 <p><strong>"Pro Hero Asfoorah Donates Full Prize Earnings to Port Worker Safety Fund"</strong></p>
-                <p>Bahraini hero Asfoorah announced today that she'll be donating her entire annual prize allocation to a fund supporting improved safety conditions for workers at the Port of Hidd.</p>
+                <p>Bahraini hero Asfoorah announced today that she'll be donating her entire annual prize allocation to a fund supporting improved safety conditions for workers at the Port of Hiddan.</p>
                 <p>"There are workers at that port who deserve better," she said. "I hope this is a start."</p>
                 <div class="note">※ That port. She picked that one.</div>
             `
@@ -1922,9 +1943,9 @@
             date: "feb 20xx",
             keywords: ["jalal", "medal", "distinguished service", "award"],
             content: `
-                <div class="tag">ministry of interior · official release</div>
+                <div class="tag">bureau of internal affairs · official release</div>
                 <p>Captain Jalal Rahimi was awarded the Distinguished Service Medal at a closed ceremony this week. Director Al-Nassar cited his "unwavering commitment to institutional integrity" and "exemplary leadership during a period of significant operational pressure."</p>
-                <p>At time of writing, Rahimi oversees all CID operations relating to the Port of Hidd jurisdiction.</p>
+                <p>At time of writing, Rahimi oversees all CID operations relating to the Port of Hiddan jurisdiction.</p>
                 <div class="note">※ Same year the Yunus case was archived...</div>
             `
         },
@@ -2323,7 +2344,7 @@
             date: "oct 20xx",
             keywords: ["medical", "clinic", "blood", "aatiq", "private", "record"],
             content: `
-                <div class="tag">al-razi private medical centre · hidd · retrieved from clinic records</div>
+                <div class="tag">al-raziq private centre · hiddan · retrieved from clinic records</div>
                 <div class="row"><span class="label">patient</span><span>YUNUS, Aatiq Khalid</span></div>
                 <div class="row"><span class="label">DOB</span><span><span class="redacted">06/26</span></span></div>
                 <div class="row"><span class="label">attending</span><span><span class="redacted">redacted</span></span></div>
