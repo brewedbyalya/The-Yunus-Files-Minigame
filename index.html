@@ -8,18 +8,19 @@
     <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --ink:       #1a1612;
-            --ink-mid:   #3d3730;
-            --ink-light: #6b5f53;
-            --ink-faint: #9a8878;
-            --paper:     #e8e0d0;
-            --paper-off: #ddd5c2;
-            --paper-warm:#f0e8d8;
-            --rule:      #c4b8a4;
-            --rule-light:#d4c8b4;
-            --accent:    #7a6550;
-            --accent-dk: #5e4e3c;
-            --red:       #6b2828;
+            --ink:       #1c1612;
+            --ink-mid:   #3a342c;
+            --ink-light: #6b5c4e;
+            --ink-faint: #9a8a7a;
+            --paper:     #e2d8c4;
+            --paper-off: #d8ccb4;
+            --paper-warm:#ece2cc;
+            --rule:      #c0b09a;
+            --rule-light:#d0c4ae;
+            --accent:    #7a6248;
+            --accent-dk: #5e4a34;
+            --red:       #6b2424;
+            --stamp-red: #8b2020;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -27,15 +28,27 @@
         body {
             background-color: var(--paper);
             background-image:
-                radial-gradient(ellipse at 20% 10%, rgba(140,110,70,0.07) 0%, transparent 55%),
-                radial-gradient(ellipse at 80% 85%, rgba(100,80,50,0.06) 0%, transparent 50%),
-                radial-gradient(ellipse at 55% 45%, rgba(160,130,90,0.04) 0%, transparent 60%),
-                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+                radial-gradient(ellipse at 7%  12%,  rgba(120,85,40,0.10) 0%, transparent 38%),
+                radial-gradient(ellipse at 91% 8%,   rgba(100,70,30,0.08) 0%, transparent 32%),
+                radial-gradient(ellipse at 18% 88%,  rgba(110,80,35,0.09) 0%, transparent 36%),
+                radial-gradient(ellipse at 83% 78%,  rgba(90,60,25,0.08)  0%, transparent 38%),
+                radial-gradient(ellipse at 50% 50%,  rgba(140,100,50,0.04) 0%, transparent 65%),
+                url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDAiIGhlaWdodD0iNDAwIj48ZmlsdGVyIGlkPSJncmFpbi1ib2R5Ij48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iMC42OCIgbnVtT2N0YXZlcz0iNCIgc3RpdGNoVGlsZXM9InN0aXRjaCIvPjxmZUNvbG9yTWF0cml4IHR5cGU9InNhdHVyYXRlIiB2YWx1ZXM9IjAiLz48L2ZpbHRlcj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgZmlsdGVyPSJ1cmwoI2dyYWluLWJvZHkpIiBvcGFjaXR5PSIwLjA2Ii8+PC9zdmc+");
             font-family: 'EB Garamond', Georgia, serif;
             font-size: 16px;
             line-height: 1.6;
             color: var(--ink);
             padding: 3rem 1.25rem 4rem;
+        }
+
+        /* Worn edge vignette */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 9999;
+            background: radial-gradient(ellipse at 50% 50%, transparent 58%, rgba(50,32,14,0.22) 100%);
         }
 
         .container { max-width: 760px; margin: 0 auto; }
@@ -44,39 +57,57 @@
         .header {
             margin-bottom: 2.5rem;
             padding-bottom: 1.25rem;
-            border-bottom: 1px solid var(--rule);
+            border-bottom: 2px solid var(--ink);
+            position: relative;
+        }
+
+        /* Double-rule under header like a typed document */
+        .header::after {
+            content: '';
+            display: block;
+            position: absolute;
+            bottom: -5px;
+            left: 0; right: 0;
+            height: 1px;
+            background: var(--rule);
         }
 
         .header-eyebrow {
             font-family: 'IBM Plex Mono', monospace;
-            font-size: 0.65rem;
-            letter-spacing: 0.12em;
+            font-size: 0.62rem;
+            letter-spacing: 0.15em;
             text-transform: uppercase;
             color: var(--ink-faint);
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.6rem;
         }
 
         .header-title {
-            font-size: 1.75rem;
+            font-size: 2rem;
             font-weight: 500;
             letter-spacing: -0.01em;
             color: var(--ink);
-            line-height: 1.2;
+            line-height: 1.15;
+            /* Slight uneven baseline like typed text */
+            text-shadow: 0.3px 0.3px 0 rgba(0,0,0,0.15);
         }
 
         .header-sub {
             font-family: 'IBM Plex Mono', monospace;
-            font-size: 0.7rem;
+            font-size: 0.68rem;
             color: var(--ink-light);
-            margin-top: 0.35rem;
+            margin-top: 0.4rem;
+            letter-spacing: 0.03em;
         }
 
         /* ── SEARCH ── */
         .search-area {
             background: var(--paper-warm);
             border: 1px solid var(--rule);
+            border-left: 3px solid var(--ink-mid);
             padding: 0.875rem 1rem;
             margin-bottom: 1rem;
+            position: relative;
+            box-shadow: 2px 2px 0 rgba(0,0,0,0.06), inset 0 0 30px rgba(180,150,100,0.05);
         }
 
         .search-row { display: flex; gap: 0.5rem; }
@@ -85,30 +116,38 @@
             flex: 1;
             padding: 0.5rem 0.75rem;
             border: 1px solid var(--rule);
+            border-bottom: 2px solid var(--rule);
             background: var(--paper-warm);
             font-family: 'IBM Plex Mono', monospace;
             font-size: 0.8rem;
             color: var(--ink);
             outline: none;
             transition: border-color 0.15s;
+            /* Typewriter feel */
+            letter-spacing: 0.02em;
         }
 
-        .search-input:focus { border-color: var(--accent); }
-        .search-input::placeholder { color: var(--ink-faint); }
+        .search-input:focus {
+            border-color: var(--accent);
+            border-bottom-color: var(--ink);
+            background: #f0e8d4;
+        }
+        .search-input::placeholder { color: var(--ink-faint); font-style: italic; }
 
         .search-btn {
             padding: 0.5rem 1.25rem;
-            background: var(--accent);
+            background: var(--ink);
             border: none;
-            color: white;
+            color: var(--paper);
             font-family: 'IBM Plex Mono', monospace;
             font-size: 0.72rem;
-            letter-spacing: 0.04em;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
             cursor: pointer;
             transition: background 0.15s;
         }
 
-        .search-btn:hover { background: var(--accent-dk); }
+        .search-btn:hover { background: var(--ink-mid); }
 
         /* ── STATS ── */
         .stats {
@@ -127,14 +166,15 @@
 
         .progress-bar {
             width: 90px;
-            height: 1px;
-            background: var(--rule);
+            height: 2px;
+            background: var(--rule-light);
+            position: relative;
         }
 
         .progress-fill {
             height: 100%;
-            background: var(--accent);
-            transition: width 0.4s ease;
+            background: var(--ink-mid);
+            transition: width 0.5s ease;
             width: 0%;
         }
 
@@ -144,13 +184,14 @@
         .docs-area {
             background: var(--paper-warm);
             border: 1px solid var(--rule);
-            border-top: 2px solid var(--ink);
+            border-top: 3px solid var(--ink);
+            box-shadow: 3px 3px 0 rgba(0,0,0,0.07);
         }
 
         .docs-header {
             padding: 0.5rem 1rem;
             border-bottom: 1px solid var(--rule-light);
-            background: var(--paper-warm);
+            background: var(--paper-off);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -160,6 +201,7 @@
             font-family: 'IBM Plex Mono', monospace;
             font-size: 0.68rem;
             color: var(--ink-light);
+            letter-spacing: 0.04em;
         }
 
         .reset-btn {
@@ -179,23 +221,41 @@
 
         /* ── FILE CARD ── */
         .file {
-            border: 1px solid var(--rule-light);
-            margin-bottom: 1.25rem;
+            border: 1px solid var(--rule);
+            border-left: 3px solid var(--rule);
+            margin-bottom: 1.5rem;
             background: var(--paper-warm);
-            transition: border-color 0.15s;
+            transition: border-color 0.15s, box-shadow 0.15s;
+            position: relative;
+            box-shadow: 2px 2px 0 rgba(0,0,0,0.05);
+        }
+
+        /* Folded corner */
+        .file::before {
+            content: '';
+            position: absolute;
+            top: 0; right: 0;
+            width: 0; height: 0;
+            border-style: solid;
+            border-width: 0 14px 14px 0;
+            border-color: transparent var(--paper) transparent transparent;
+            z-index: 1;
         }
 
         .file:last-child { margin-bottom: 0; }
-        .file:hover { border-color: var(--rule); }
+        .file:hover {
+            border-left-color: var(--accent);
+            box-shadow: 3px 3px 0 rgba(0,0,0,0.09);
+        }
 
         .file.read {
-            opacity: 0.55;
-            transition: border-color 0.15s, opacity 0.4s ease;
+            opacity: 0.48;
+            transition: border-color 0.15s, opacity 0.4s ease, box-shadow 0.15s;
         }
         .file.read:hover { opacity: 1; }
 
         .file-header {
-            padding: 0.4rem 0.875rem;
+            padding: 0.4rem 1.2rem 0.4rem 0.875rem;
             background: var(--paper-off);
             border-bottom: 1px solid var(--rule-light);
             display: flex;
@@ -244,28 +304,35 @@
         /* ── ELEMENTS ── */
         .tag {
             font-family: 'IBM Plex Mono', monospace;
-            font-size: 0.63rem;
+            font-size: 0.6rem;
             background: var(--paper-off);
-            border: 1px solid var(--rule-light);
+            border: 1px solid var(--rule);
+            border-bottom: 2px solid var(--rule);
             display: inline-block;
-            padding: 0.1rem 0.45rem;
-            margin-bottom: 0.75rem;
+            padding: 0.12rem 0.5rem;
+            margin-bottom: 0.85rem;
             color: var(--ink-light);
-            letter-spacing: 0.03em;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            /* Rubber stamp feel */
+            box-shadow: 1px 1px 0 rgba(0,0,0,0.08);
         }
 
         .redacted {
             background: var(--ink);
             color: var(--ink);
-            padding: 0 3px;
-            border-radius: 1px;
+            padding: 0 4px;
+            border-radius: 0;
             cursor: pointer;
             transition: background 0.3s, color 0.3s;
+            /* Marker-thick feel */
+            box-shadow: 1px 0 0 var(--ink), -1px 0 0 var(--ink);
         }
 
         .redacted:hover {
-            background: #e8e0d4;
+            background: #ece4d8;
             color: var(--red);
+            box-shadow: none;
         }
 
         .row {
@@ -278,47 +345,62 @@
 
         .label {
             font-family: 'IBM Plex Mono', monospace;
-            font-size: 0.65rem;
+            font-size: 0.62rem;
             color: var(--ink-faint);
             text-transform: uppercase;
-            letter-spacing: 0.04em;
+            letter-spacing: 0.06em;
             padding-top: 2px;
         }
 
         .note {
-            background: var(--paper-warm);
-            border-left: 2px solid var(--rule);
-            padding: 0.45rem 0.7rem;
-            margin: 0.75rem 0;
-            font-size: 0.83rem;
+            background: linear-gradient(to right, rgba(180,155,110,0.08), transparent);
+            border-left: 2px solid var(--accent);
+            padding: 0.5rem 0.75rem;
+            margin: 0.85rem 0;
+            font-size: 0.85rem;
             color: var(--ink-light);
             font-style: italic;
+            /* Handwritten-in-margin feel */
+            letter-spacing: 0.01em;
         }
 
         .note:last-child { margin-bottom: 0; }
 
         .photo {
-            border: 1px dashed var(--rule);
+            border: 1px solid var(--rule-light);
+            border-left: 3px solid var(--rule);
             background: var(--paper-off);
-            padding: 0.55rem 0.7rem;
+            padding: 0.6rem 0.75rem;
             font-size: 0.82rem;
             color: var(--ink-light);
-            margin: 0.5rem 0;
-            line-height: 1.5;
+            margin: 0.6rem 0;
+            line-height: 1.55;
+            /* Like a contact sheet label */
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.02);
         }
 
         .empty {
             text-align: center;
             padding: 3.5rem 1rem;
             font-family: 'IBM Plex Mono', monospace;
-            font-size: 0.75rem;
+            font-size: 0.73rem;
             color: var(--ink-faint);
+            letter-spacing: 0.04em;
         }
 
         .handwriting {
             font-style: italic;
             color: var(--ink-mid);
-            line-height: 1.8;
+            line-height: 1.85;
+            /* Ruled-paper lines under handwriting */
+            background-image: repeating-linear-gradient(
+                transparent,
+                transparent 29px,
+                rgba(180,160,130,0.18) 29px,
+                rgba(180,160,130,0.18) 30px
+            );
+            padding: 0.15rem 0.5rem 0.15rem 0;
+        }
         }
 
         blockquote {
@@ -375,16 +457,19 @@
         /* ── CORKBOARD BUTTON ── */
         .corkboard-btn {
             font-family: 'IBM Plex Mono', monospace;
-            font-size: 0.68rem;
+            font-size: 0.65rem;
             color: var(--ink-light);
-            background: none;
+            background: var(--paper-off);
             border: 1px solid var(--rule);
-            padding: 0.2rem 0.6rem;
+            border-bottom: 2px solid var(--rule);
+            padding: 0.22rem 0.65rem;
             cursor: pointer;
-            letter-spacing: 0.04em;
-            transition: border-color 0.15s, color 0.15s;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            transition: border-color 0.15s, color 0.15s, background 0.15s;
+            box-shadow: 1px 1px 0 rgba(0,0,0,0.06);
         }
-        .corkboard-btn:hover { border-color: var(--accent); color: var(--accent); }
+        .corkboard-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--paper-warm); }
         .corkboard-btn.has-pins { color: var(--accent); border-color: var(--accent); }
 
         /* ── CORKBOARD OVERLAY ── */
@@ -393,12 +478,13 @@
             position: fixed;
             inset: 0;
             z-index: 1000;
-            background: #3a2e1e;
+            background: #2e2416;
             background-image:
-                repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(0,0,0,0.08) 39px, rgba(0,0,0,0.08) 40px),
-                repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(0,0,0,0.08) 39px, rgba(0,0,0,0.08) 40px),
-                radial-gradient(ellipse at 30% 20%, rgba(80,55,25,0.5) 0%, transparent 60%),
-                radial-gradient(ellipse at 75% 80%, rgba(40,28,12,0.4) 0%, transparent 55%);
+                /* Cork texture via noise */
+                url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIj48ZmlsdGVyIGlkPSJncmFpbi1jb3JrIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iMC44NSIgbnVtT2N0YXZlcz0iNCIgc3RpdGNoVGlsZXM9InN0aXRjaCIvPjxmZUNvbG9yTWF0cml4IHR5cGU9InNhdHVyYXRlIiB2YWx1ZXM9IjAuNCIvPjwvZmlsdGVyPjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWx0ZXI9InVybCgjZ3JhaW4tY29yaykiIG9wYWNpdHk9IjAuMTIiLz48L3N2Zz4="),
+                radial-gradient(ellipse at 25% 25%, rgba(100,70,30,0.6) 0%, transparent 55%),
+                radial-gradient(ellipse at 78% 75%, rgba(55,35,14,0.5) 0%, transparent 52%),
+                radial-gradient(ellipse at 50% 50%, rgba(70,48,22,0.3) 0%, transparent 70%);
             overflow: hidden;
         }
         #corkboard.active { display: block; }
@@ -644,8 +730,8 @@
             position: fixed;
             inset: 0;
             z-index: 1100;
-            background: rgba(10,7,4,0.72);
-            backdrop-filter: blur(3px);
+            background: rgba(8,5,2,0.78);
+            backdrop-filter: blur(4px);
             align-items: center;
             justify-content: center;
         }
@@ -655,17 +741,27 @@
             width: min(680px, 94vw);
             max-height: 82vh;
             background: var(--paper-warm);
+            background-image:
+                radial-gradient(ellipse at 10% 5%, rgba(120,85,40,0.07) 0%, transparent 35%),
+                radial-gradient(ellipse at 90% 92%, rgba(100,70,30,0.06) 0%, transparent 30%),
+                url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJncmFpbi12aWV3ZXIiPjxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIwLjcyIiBudW1PY3RhdmVzPSI0IiBzdGl0Y2hUaWxlcz0ic3RpdGNoIi8+PGZlQ29sb3JNYXRyaXggdHlwZT0ic2F0dXJhdGUiIHZhbHVlcz0iMCIvPjwvZmlsdGVyPjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIiBmaWx0ZXI9InVybCgjZ3JhaW4tdmlld2VyKSIgb3BhY2l0eT0iMC4wNDUiLz48L3N2Zz4=");
             border: 1px solid var(--rule);
-            border-top: 2px solid var(--ink);
-            box-shadow: 0 12px 50px rgba(0,0,0,0.55), 0 2px 10px rgba(0,0,0,0.35);
+            border-top: 3px solid var(--ink);
+            border-left: 3px solid var(--rule);
+            box-shadow:
+                0 20px 60px rgba(0,0,0,0.6),
+                0 4px 16px rgba(0,0,0,0.4),
+                inset 0 0 0 1px rgba(255,255,255,0.04);
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            /* Slight tilt like a document pulled from a folder */
+            transform: rotate(-0.25deg);
         }
 
         #doc-viewer-header {
             background: var(--paper-off);
-            border-bottom: 1px solid var(--rule-light);
+            border-bottom: 2px solid var(--rule-light);
             padding: 0.45rem 0.875rem;
             display: flex;
             justify-content: space-between;
@@ -681,44 +777,51 @@
 
         #doc-viewer-type {
             font-family: 'IBM Plex Mono', monospace;
-            font-size: 0.63rem;
+            font-size: 0.6rem;
             color: var(--accent);
             text-transform: uppercase;
-            letter-spacing: 0.08em;
+            letter-spacing: 0.1em;
         }
 
         #doc-viewer-date {
             font-family: 'IBM Plex Mono', monospace;
-            font-size: 0.63rem;
+            font-size: 0.6rem;
             color: var(--ink-faint);
+            letter-spacing: 0.04em;
         }
 
         #doc-viewer-close {
             font-family: 'IBM Plex Mono', monospace;
-            font-size: 0.65rem;
-            background: none;
+            font-size: 0.62rem;
+            background: var(--paper-off);
             border: 1px solid var(--rule);
+            border-bottom: 2px solid var(--rule);
             color: var(--ink-faint);
-            padding: 0.15rem 0.55rem;
+            padding: 0.15rem 0.6rem;
             cursor: pointer;
-            letter-spacing: 0.03em;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
             transition: all 0.15s;
+            box-shadow: 1px 1px 0 rgba(0,0,0,0.07);
         }
-        #doc-viewer-close:hover { border-color: var(--accent); color: var(--accent); }
+        #doc-viewer-close:hover { border-color: var(--accent); color: var(--accent); background: var(--paper-warm); }
 
         #doc-viewer-title {
-            font-size: 1.1rem;
+            font-size: 1.15rem;
             font-weight: 500;
-            padding: 0.75rem 0.875rem 0.3rem;
+            padding: 0.85rem 0.875rem 0.35rem;
             color: var(--ink);
             letter-spacing: -0.01em;
             flex-shrink: 0;
+            text-shadow: 0.2px 0.2px 0 rgba(0,0,0,0.1);
+            border-bottom: 1px solid var(--rule-light);
+            margin-bottom: 0.1rem;
         }
 
         #doc-viewer-body {
-            padding: 0 0.875rem 1.1rem;
-            font-size: 0.92rem;
-            line-height: 1.65;
+            padding: 0.65rem 0.875rem 1.1rem;
+            font-size: 0.93rem;
+            line-height: 1.68;
             color: var(--ink-mid);
             overflow-y: auto;
         }
@@ -729,12 +832,14 @@
         /* ── FOOTER ── */
         .footer {
             font-family: 'IBM Plex Mono', monospace;
-            font-size: 0.63rem;
+            font-size: 0.6rem;
             color: var(--ink-faint);
-            margin-top: 1.25rem;
+            margin-top: 1.5rem;
             text-align: right;
             border-top: 1px solid var(--rule-light);
             padding-top: 0.75rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
         }
 
         /* ── MOBILE ── */
@@ -933,8 +1038,8 @@
                 <div class="tag">personal correspondence · recovered from rahimi residence</div>
                 <p><strong>N —</strong></p>
                 <p>I  spent a year on this. He trusts me completely. He has no idea what he's worth.</p>
-                <p>His quirk makes him exceptional for what your partners need. Surveillance that leaves no record. A pretty face and a good figure. To him, I'm his greatest mentor.</p>
-                <p>Beyond that: he is young, unattached, without dependents, no record of dissent. He'll travel willingly if asked by someone he trusts. Hes been conditioned to trust me.</p>
+                <p>His quirk makes him exceptional for what your partners need. Surveillance that leaves no record. Access that raises no flags. Birds go where people cant. To him, I'm his greatest mentor.</p>
+                <p>Beyond the quirk: he is young, unattached, without dependents, no record of dissent. He'll travel willingly if asked by someone he trusts. Hes been conditioned to trust me.</p>
                 <p>The father is the complication. Khalid keeps pulling at the manifest figures. If that becomes untenable, I'll manage it separately.</p>
                 <p>As for my intentions: I haven't fully decided. Some things I want to keep.</p>
                 <p>— J.</p>
