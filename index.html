@@ -55,7 +55,7 @@
 
         /* ── HEADER ── */
         .header {
-            margin-bottom: 2.5rem;
+            margin-bottom: 1.5rem;
             padding-bottom: 1.25rem;
             border-bottom: 2px solid var(--ink);
             position: relative;
@@ -70,6 +70,18 @@
             left: 0; right: 0;
             height: 1px;
             background: var(--rule);
+        }
+
+        /* Coffee stain — positioned bottom-right of header, bleeds onto search */
+        .coffee-stain {
+            position: absolute;
+            bottom: -38px;
+            right: 18px;
+            width: 90px;
+            height: 90px;
+            pointer-events: none;
+            z-index: 10;
+            opacity: 0.55;
         }
 
         .header-eyebrow {
@@ -136,9 +148,10 @@
 
         .search-btn {
             padding: 0.5rem 1.25rem;
-            background: var(--ink);
+            background: var(--accent);
             border: none;
-            color: var(--paper);
+            border-bottom: 2px solid var(--accent-dk);
+            color: var(--paper-warm);
             font-family: 'IBM Plex Mono', monospace;
             font-size: 0.72rem;
             letter-spacing: 0.08em;
@@ -147,7 +160,7 @@
             transition: background 0.15s;
         }
 
-        .search-btn:hover { background: var(--ink-mid); }
+        .search-btn:hover { background: var(--accent-dk); }
 
         /* ── STATS ── */
         .stats {
@@ -289,7 +302,7 @@
             padding: 0 0.875rem 0.875rem;
             font-size: 0.92rem;
             line-height: 1.65;
-            color: var(--ink-mid);
+            color: var(--ink);
         }
 
         .file-body p { margin-bottom: 0.65rem; }
@@ -870,6 +883,30 @@
         <div class="header-eyebrow">case file · port of hidd · bahrain</div>
         <div class="header-title">The Yunus Files</div>
         <div class="header-sub">compiled 20xx – 20xx · not for distribution</div>
+        <!-- Coffee stain -->
+        <svg class="coffee-stain" viewBox="0 0 90 90" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <filter id="stain-blur">
+                    <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="4" seed="8" result="noise"/>
+                    <feDisplacementMap in="SourceGraphic" in2="noise" scale="6" xChannelSelector="R" yChannelSelector="G"/>
+                </filter>
+                <radialGradient id="stain-grad" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%"   stop-color="#6b4c2a" stop-opacity="0.0"/>
+                    <stop offset="60%"  stop-color="#5a3d1e" stop-opacity="0.08"/>
+                    <stop offset="82%"  stop-color="#3d2810" stop-opacity="0.28"/>
+                    <stop offset="92%"  stop-color="#2e1e0a" stop-opacity="0.38"/>
+                    <stop offset="100%" stop-color="#1a1008" stop-opacity="0.12"/>
+                </radialGradient>
+                <radialGradient id="stain-inner" cx="48%" cy="52%" r="38%">
+                    <stop offset="0%"   stop-color="#7a5530" stop-opacity="0.04"/>
+                    <stop offset="100%" stop-color="#7a5530" stop-opacity="0.0"/>
+                </radialGradient>
+            </defs>
+            <g filter="url(#stain-blur)">
+                <ellipse cx="45" cy="45" rx="40" ry="38" fill="url(#stain-grad)"/>
+                <ellipse cx="45" cy="45" rx="26" ry="24" fill="url(#stain-inner)"/>
+            </g>
+        </svg>
     </div>
 
     <div class="search-area">
