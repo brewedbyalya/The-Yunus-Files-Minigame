@@ -1,0 +1,2241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>yunus files</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink:       #1a1612;
+            --ink-mid:   #3d3730;
+            --ink-light: #6b5f53;
+            --ink-faint: #9a8878;
+            --paper:     #e8e0d0;
+            --paper-off: #ddd5c2;
+            --paper-warm:#f0e8d8;
+            --rule:      #c4b8a4;
+            --rule-light:#d4c8b4;
+            --accent:    #7a6550;
+            --accent-dk: #5e4e3c;
+            --red:       #6b2828;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--paper);
+            background-image:
+                radial-gradient(ellipse at 20% 10%, rgba(140,110,70,0.07) 0%, transparent 55%),
+                radial-gradient(ellipse at 80% 85%, rgba(100,80,50,0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 55% 45%, rgba(160,130,90,0.04) 0%, transparent 60%),
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--ink);
+            padding: 3rem 1.25rem 4rem;
+        }
+
+        .container { max-width: 760px; margin: 0 auto; }
+
+        /* ── HEADER ── */
+        .header {
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.25rem;
+            border-bottom: 1px solid var(--rule);
+        }
+
+        .header-eyebrow {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+            margin-bottom: 0.5rem;
+        }
+
+        .header-title {
+            font-size: 1.75rem;
+            font-weight: 500;
+            letter-spacing: -0.01em;
+            color: var(--ink);
+            line-height: 1.2;
+        }
+
+        .header-sub {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--ink-light);
+            margin-top: 0.35rem;
+        }
+
+        /* ── SEARCH ── */
+        .search-area {
+            background: var(--paper-warm);
+            border: 1px solid var(--rule);
+            padding: 0.875rem 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .search-row { display: flex; gap: 0.5rem; }
+
+        .search-input {
+            flex: 1;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid var(--rule);
+            background: var(--paper-warm);
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--ink);
+            outline: none;
+            transition: border-color 0.15s;
+        }
+
+        .search-input:focus { border-color: var(--accent); }
+        .search-input::placeholder { color: var(--ink-faint); }
+
+        .search-btn {
+            padding: 0.5rem 1.25rem;
+            background: var(--accent);
+            border: none;
+            color: white;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.72rem;
+            letter-spacing: 0.04em;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .search-btn:hover { background: var(--accent-dk); }
+
+        /* ── STATS ── */
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.25rem;
+            padding: 0.35rem 0;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.68rem;
+            color: var(--ink-light);
+            border-bottom: 1px solid var(--rule-light);
+        }
+
+        .progress { display: flex; align-items: center; gap: 0.6rem; }
+
+        .progress-bar {
+            width: 90px;
+            height: 1px;
+            background: var(--rule);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--accent);
+            transition: width 0.4s ease;
+            width: 0%;
+        }
+
+        #failedDisplay { color: var(--red); font-size: 0.65rem; }
+
+        /* ── DOCS CONTAINER ── */
+        .docs-area {
+            background: var(--paper-warm);
+            border: 1px solid var(--rule);
+            border-top: 2px solid var(--ink);
+        }
+
+        .docs-header {
+            padding: 0.5rem 1rem;
+            border-bottom: 1px solid var(--rule-light);
+            background: var(--paper-warm);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .result-count {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.68rem;
+            color: var(--ink-light);
+        }
+
+        .reset-btn {
+            background: none;
+            border: none;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.68rem;
+            color: var(--ink-faint);
+            cursor: pointer;
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+
+        .reset-btn:hover { color: var(--ink-mid); }
+
+        .results { padding: 1.25rem; }
+
+        /* ── FILE CARD ── */
+        .file {
+            border: 1px solid var(--rule-light);
+            margin-bottom: 1.25rem;
+            background: var(--paper-warm);
+            transition: border-color 0.15s;
+        }
+
+        .file:last-child { margin-bottom: 0; }
+        .file:hover { border-color: var(--rule); }
+
+        .file.read {
+            opacity: 0.55;
+            transition: border-color 0.15s, opacity 0.4s ease;
+        }
+        .file.read:hover { opacity: 1; }
+
+        .file-header {
+            padding: 0.4rem 0.875rem;
+            background: var(--paper-off);
+            border-bottom: 1px solid var(--rule-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .file-type {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.63rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .file-date {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.63rem;
+            color: var(--ink-faint);
+        }
+
+        .file-title {
+            font-size: 1.05rem;
+            font-weight: 500;
+            padding: 0.75rem 0.875rem 0.3rem;
+            color: var(--ink);
+            letter-spacing: -0.01em;
+        }
+
+        .file-body {
+            padding: 0 0.875rem 0.875rem;
+            font-size: 0.92rem;
+            line-height: 1.65;
+            color: var(--ink-mid);
+        }
+
+        .file-body p { margin-bottom: 0.65rem; }
+        .file-body p:last-child { margin-bottom: 0; }
+
+        .file-body hr {
+            border: none;
+            border-top: 1px solid var(--rule-light);
+            margin: 0.65rem 0;
+        }
+
+        /* ── ELEMENTS ── */
+        .tag {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.63rem;
+            background: var(--paper-off);
+            border: 1px solid var(--rule-light);
+            display: inline-block;
+            padding: 0.1rem 0.45rem;
+            margin-bottom: 0.75rem;
+            color: var(--ink-light);
+            letter-spacing: 0.03em;
+        }
+
+        .redacted {
+            background: var(--ink);
+            color: var(--ink);
+            padding: 0 3px;
+            border-radius: 1px;
+            cursor: pointer;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .redacted:hover {
+            background: #e8e0d4;
+            color: var(--red);
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 95px 1fr;
+            gap: 0.15rem 0.5rem;
+            margin-bottom: 0.3rem;
+            font-size: 0.88rem;
+        }
+
+        .label {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--ink-faint);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            padding-top: 2px;
+        }
+
+        .note {
+            background: var(--paper-warm);
+            border-left: 2px solid var(--rule);
+            padding: 0.45rem 0.7rem;
+            margin: 0.75rem 0;
+            font-size: 0.83rem;
+            color: var(--ink-light);
+            font-style: italic;
+        }
+
+        .note:last-child { margin-bottom: 0; }
+
+        .photo {
+            border: 1px dashed var(--rule);
+            background: var(--paper-off);
+            padding: 0.55rem 0.7rem;
+            font-size: 0.82rem;
+            color: var(--ink-light);
+            margin: 0.5rem 0;
+            line-height: 1.5;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 3.5rem 1rem;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--ink-faint);
+        }
+
+        .handwriting {
+            font-style: italic;
+            color: var(--ink-mid);
+            line-height: 1.8;
+        }
+
+        blockquote {
+            border-left: 2px solid var(--rule);
+            padding-left: 0.85rem;
+            margin: 0.65rem 0;
+            color: var(--ink-light);
+            font-style: italic;
+        }
+
+        ul {
+            margin-left: 1.1rem;
+            margin-top: 0.4rem;
+            margin-bottom: 0.4rem;
+        }
+
+        li { margin-bottom: 0.25rem; font-size: 0.92rem; }
+
+        /* ── SEE ALSO ── */
+        .see-also {
+            border-top: 1px solid var(--rule-light);
+            padding: 0.4rem 0.875rem 0.5rem;
+            background: var(--paper-off);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.35rem;
+            align-items: center;
+        }
+
+        .see-also-label {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.58rem;
+            color: var(--ink-faint);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-right: 0.2rem;
+            flex-shrink: 0;
+        }
+
+        .see-also-link {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.62rem;
+            color: var(--accent);
+            cursor: pointer;
+            text-decoration: underline;
+            text-underline-offset: 2px;
+            background: none;
+            border: none;
+            padding: 0;
+        }
+
+        .see-also-link:hover { color: var(--accent-dk); }
+
+        /* ── CORKBOARD BUTTON ── */
+        .corkboard-btn {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.68rem;
+            color: var(--ink-light);
+            background: none;
+            border: 1px solid var(--rule);
+            padding: 0.2rem 0.6rem;
+            cursor: pointer;
+            letter-spacing: 0.04em;
+            transition: border-color 0.15s, color 0.15s;
+        }
+        .corkboard-btn:hover { border-color: var(--accent); color: var(--accent); }
+        .corkboard-btn.has-pins { color: var(--accent); border-color: var(--accent); }
+
+        /* ── CORKBOARD OVERLAY ── */
+        #corkboard {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            background: #3a2e1e;
+            background-image:
+                repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(0,0,0,0.08) 39px, rgba(0,0,0,0.08) 40px),
+                repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(0,0,0,0.08) 39px, rgba(0,0,0,0.08) 40px),
+                radial-gradient(ellipse at 30% 20%, rgba(80,55,25,0.5) 0%, transparent 60%),
+                radial-gradient(ellipse at 75% 80%, rgba(40,28,12,0.4) 0%, transparent 55%);
+            overflow: hidden;
+        }
+        #corkboard.active { display: block; }
+
+        #cork-header {
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 44px;
+            background: rgba(20,14,8,0.7);
+            border-bottom: 1px solid rgba(255,255,255,0.07);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 1.25rem;
+            z-index: 10;
+        }
+
+        #cork-title {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: rgba(200,180,150,0.6);
+        }
+
+        #cork-controls {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+        }
+
+        .cork-ctrl-btn {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.65rem;
+            background: none;
+            border: 1px solid rgba(200,180,150,0.2);
+            color: rgba(200,180,150,0.55);
+            padding: 0.2rem 0.65rem;
+            cursor: pointer;
+            letter-spacing: 0.04em;
+            transition: all 0.15s;
+        }
+        .cork-ctrl-btn:hover { border-color: rgba(200,180,150,0.5); color: rgba(200,180,150,0.9); }
+        .cork-ctrl-btn.active { border-color: #c8a86a; color: #c8a86a; }
+
+        #cork-hint {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.6rem;
+            color: rgba(200,180,150,0.3);
+            letter-spacing: 0.03em;
+            pointer-events: none;
+        }
+
+        #cork-canvas {
+            position: absolute;
+            inset: 44px 0 0 0;
+            width: 100%;
+            height: calc(100% - 44px);
+        }
+
+        #cork-svg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        #cork-cards-layer {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+        }
+
+        .cork-card {
+            position: absolute;
+            width: 180px;
+            background: #f5edd8;
+            border: 1px solid #c8b48a;
+            box-shadow: 2px 3px 10px rgba(0,0,0,0.45), 0 1px 3px rgba(0,0,0,0.3);
+            cursor: grab;
+            user-select: none;
+            transition: box-shadow 0.15s;
+        }
+        .cork-card:active { cursor: grabbing; }
+        .cork-card.selected-src {
+            box-shadow: 0 0 0 2px #c8a86a, 2px 3px 12px rgba(0,0,0,0.5);
+        }
+        .cork-card.connecting-mode {
+            cursor: crosshair;
+        }
+        .cork-card.connecting-mode:hover {
+            box-shadow: 0 0 0 2px rgba(200,168,106,0.6), 2px 3px 12px rgba(0,0,0,0.5);
+        }
+
+        .cork-pin {
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 35%, #e06060, #8b2020);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+            z-index: 3;
+        }
+
+        .cork-card-type {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.55rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #8a7560;
+            padding: 0.45rem 0.55rem 0.1rem;
+            border-bottom: 1px solid #d8cbb0;
+        }
+
+        .cork-card-title {
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 0.82rem;
+            color: #1a1612;
+            padding: 0.35rem 0.55rem 0.45rem;
+            line-height: 1.35;
+        }
+
+        .cork-card:not(.connecting-mode):hover .cork-card-title {
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+
+        /* ── NOTEPAD OVERLAY ── */
+        #notepad {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 900;
+            background: rgba(15,10,5,0.55);
+            backdrop-filter: blur(2px);
+            align-items: center;
+            justify-content: center;
+        }
+        #notepad.active { display: flex; }
+
+        #notepad-inner {
+            width: min(560px, 92vw);
+            background: #f2e8d5;
+            background-image:
+                repeating-linear-gradient(
+                    transparent,
+                    transparent 27px,
+                    #d4c8b0 27px,
+                    #d4c8b0 28px
+                );
+            border: 1px solid #b8a888;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.5), 0 2px 8px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            max-height: 80vh;
+            position: relative;
+        }
+
+        #notepad-header {
+            background: #e0d4bc;
+            border-bottom: 2px solid #b8a888;
+            padding: 0.6rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        #notepad-title {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.62rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #7a6550;
+        }
+
+        #notepad-controls {
+            display: flex;
+            gap: 0.6rem;
+            align-items: center;
+        }
+
+        .notepad-btn {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.62rem;
+            background: none;
+            border: 1px solid #c4b090;
+            color: #8a7060;
+            padding: 0.15rem 0.55rem;
+            cursor: pointer;
+            letter-spacing: 0.03em;
+            transition: all 0.15s;
+        }
+        .notepad-btn:hover { border-color: #8a7060; color: #5a4030; }
+
+        #notepad-status {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.58rem;
+            color: #a08060;
+            letter-spacing: 0.04em;
+            min-width: 4rem;
+            text-align: right;
+            transition: opacity 0.3s;
+        }
+
+        #notepad-textarea {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            resize: none;
+            padding: 0.5rem 1rem 1rem 3.5rem;
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 1rem;
+            line-height: 28px;
+            color: #1a1410;
+            min-height: 340px;
+            overflow-y: auto;
+        }
+        #notepad-textarea::placeholder {
+            color: #b8a888;
+            font-style: italic;
+        }
+
+        #notepad-margin {
+            position: absolute;
+            left: 3rem;
+            top: 44px;
+            bottom: 0;
+            width: 1px;
+            background: rgba(180,100,80,0.25);
+            pointer-events: none;
+        }
+
+        /* ── DOC VIEWER MODAL ── */
+        #doc-viewer {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 1100;
+            background: rgba(10,7,4,0.72);
+            backdrop-filter: blur(3px);
+            align-items: center;
+            justify-content: center;
+        }
+        #doc-viewer.active { display: flex; }
+
+        #doc-viewer-inner {
+            width: min(680px, 94vw);
+            max-height: 82vh;
+            background: var(--paper-warm);
+            border: 1px solid var(--rule);
+            border-top: 2px solid var(--ink);
+            box-shadow: 0 12px 50px rgba(0,0,0,0.55), 0 2px 10px rgba(0,0,0,0.35);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        #doc-viewer-header {
+            background: var(--paper-off);
+            border-bottom: 1px solid var(--rule-light);
+            padding: 0.45rem 0.875rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        #doc-viewer-meta {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+        }
+
+        #doc-viewer-type {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.63rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        #doc-viewer-date {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.63rem;
+            color: var(--ink-faint);
+        }
+
+        #doc-viewer-close {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.65rem;
+            background: none;
+            border: 1px solid var(--rule);
+            color: var(--ink-faint);
+            padding: 0.15rem 0.55rem;
+            cursor: pointer;
+            letter-spacing: 0.03em;
+            transition: all 0.15s;
+        }
+        #doc-viewer-close:hover { border-color: var(--accent); color: var(--accent); }
+
+        #doc-viewer-title {
+            font-size: 1.1rem;
+            font-weight: 500;
+            padding: 0.75rem 0.875rem 0.3rem;
+            color: var(--ink);
+            letter-spacing: -0.01em;
+            flex-shrink: 0;
+        }
+
+        #doc-viewer-body {
+            padding: 0 0.875rem 1.1rem;
+            font-size: 0.92rem;
+            line-height: 1.65;
+            color: var(--ink-mid);
+            overflow-y: auto;
+        }
+
+        #doc-viewer-body p { margin-bottom: 0.65rem; }
+        #doc-viewer-body p:last-child { margin-bottom: 0; }
+
+        /* ── FOOTER ── */
+        .footer {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.63rem;
+            color: var(--ink-faint);
+            margin-top: 1.25rem;
+            text-align: right;
+            border-top: 1px solid var(--rule-light);
+            padding-top: 0.75rem;
+        }
+
+        /* ── MOBILE ── */
+        @media (max-width: 600px) {
+            body { padding: 1.5rem 0.875rem 3rem; font-size: 15px; }
+            .header-title { font-size: 1.4rem; }
+            .stats { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+            .stats > div { width: 100%; justify-content: space-between; }
+            .search-input { font-size: 16px; }
+            .file-title { font-size: 0.98rem; }
+            .file-body  { font-size: 0.88rem; }
+            #cork-header { height: auto; min-height: 44px; flex-wrap: wrap; padding: 0.4rem 0.75rem; gap: 0.35rem; }
+            #cork-hint { display: none; }
+            #cork-controls { gap: 0.4rem; flex-wrap: wrap; justify-content: flex-end; }
+            .cork-ctrl-btn { font-size: 0.6rem; padding: 0.2rem 0.45rem; }
+            .cork-card { width: 140px; }
+            .cork-card-title { font-size: 0.76rem; }
+            #doc-viewer { align-items: flex-end; }
+            #doc-viewer-inner { width: 100%; max-height: 92vh; border-left: none; border-right: none; border-bottom: none; border-radius: 0; }
+            #notepad-inner { width: 100%; max-height: 90vh; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <div class="header-eyebrow">case file · port of hidd · bahrain</div>
+        <div class="header-title">The Yunus Files</div>
+        <div class="header-sub">compiled 20xx – 20xx · not for distribution</div>
+    </div>
+
+    <div class="search-area">
+        <div class="search-row">
+            <input type="text" id="searchInput" class="search-input" placeholder="search by name, keyword, topic…" autocomplete="off" spellcheck="false">
+            <button id="searchBtn" class="search-btn">search</button>
+        </div>
+    </div>
+
+    <div class="stats">
+        <div class="progress">
+            <span>files recovered</span>
+            <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+            <span><span id="discoveredCount">0</span> / <span id="totalDocsSpan">0</span></span>
+        </div>
+        <div style="display:flex;align-items:center;gap:0.75rem;">
+            <div id="failedDisplay"></div>
+            <button class="corkboard-btn" id="corkboardBtn" title="Open evidence board">evidence board</button>
+            <button class="corkboard-btn" id="notepadBtn" title="Open notepad">notepad</button>
+        </div>
+    </div>
+
+    <div class="docs-area">
+        <div class="docs-header">
+            <span class="result-count" id="resultCount">—</span>
+            <button id="resetBtn" class="reset-btn">clear all</button>
+        </div>
+        <div class="results" id="resultsContainer">
+            <div class="empty">enter a search term to retrieve files</div>
+        </div>
+    </div>
+
+    <div class="footer">recovered · origin unknown · compiler status unknown</div>
+</div>
+
+<!-- NOTEPAD OVERLAY -->
+<div id="notepad">
+    <div id="notepad-inner">
+        <div id="notepad-margin"></div>
+        <div id="notepad-header">
+            <span id="notepad-title">notes</span>
+            <div id="notepad-controls">
+                <span id="notepad-status"></span>
+                <button class="notepad-btn" id="clearNotepadBtn">clear</button>
+                <button class="notepad-btn" id="closeNotepadBtn">close</button>
+            </div>
+        </div>
+        <textarea id="notepad-textarea" placeholder="write here…" spellcheck="false"></textarea>
+    </div>
+</div>
+
+<!-- CORKBOARD OVERLAY -->
+<div id="corkboard">
+    <div id="cork-header">
+        <span id="cork-title">evidence board</span>
+        <div id="cork-controls">
+            <span id="cork-hint">drag cards · use connect mode to draw strings</span>
+            <button class="cork-ctrl-btn" id="connectModeBtn">connect</button>
+            <button class="cork-ctrl-btn" id="clearStringsBtn">clear strings</button>
+            <button class="cork-ctrl-btn" id="closeCorkboard">close</button>
+        </div>
+    </div>
+    <div id="cork-canvas">
+        <svg id="cork-svg" id="cork-svg"></svg>
+        <div id="cork-cards-layer"></div>
+    </div>
+</div>
+
+<!-- DOC VIEWER MODAL -->
+<div id="doc-viewer">
+    <div id="doc-viewer-inner">
+        <div id="doc-viewer-header">
+            <div id="doc-viewer-meta">
+                <span id="doc-viewer-type"></span>
+                <span id="doc-viewer-date"></span>
+            </div>
+            <button id="doc-viewer-close">close</button>
+        </div>
+        <div id="doc-viewer-title"></div>
+        <div id="doc-viewer-body"></div>
+    </div>
+</div>
+
+<script>
+    const DOCUMENTS = [
+        // 1
+        {
+            id: "incident_001",
+            title: "incident report — detective khalid yunus",
+            type: "police document",
+            date: "22 march 20xx",
+            keywords: ["report", "jalal", "khalid", "yunus", "incident", "hidd", "warehouse", "rahimi", "fire"],
+            content: `
+                <div class="tag">CID/IR-20xx-0419 · closed</div>
+                <div class="row"><span class="label">subject</span><span>YUNUS, Khalid Rashed — Detective, Grade III</span></div>
+                <div class="row"><span class="label">date</span><span>19 March 20xx, approx. 23:40</span></div>
+                <div class="row"><span class="label">location</span><span>Port of Hidd, Warehouse 7</span></div>
+                <div class="row"><span class="label">reporting</span><span>Capt. Jalal Rahimi</span></div>
+                <hr>
+                <p>Yunus was conducting an after-hours inspection of Warehouse 7 following an anonymous tip regarding irregular cargo activity. At 23:40, a fire ignited in stored industrial solvents. It spread quickly. Yunus reportedly re-entered the structure to rescue a trapped civilian worker. He didn't come out.</p>
+                <p>The anonymous tip was traced to a burner phone. <span class="redacted">Number unrecovered. Origin untraced.</span></p>
+                <div class="note">※ Two queries about Manifest 7C, both routed through Rahimi's office. Disposition: <span class="redacted">withdrawn</span>. Neither got a written response.</div>
+            `
+        },
+        // 2
+        {
+            id: "autopsy_001",
+            title: "post-mortem examination",
+            type: "forensic",
+            date: "21 march 20xx",
+            keywords: ["autopsy", "khalid", "qassem", "contusion", "succinylcholine", "toxicology", "burns", "wrists"],
+            content: `
+                <div class="tag">FMD/PM-20xx-0217 · restricted</div>
+                <div class="row"><span class="label">deceased</span><span>Khalid Rashed Yunus, 51</span></div>
+                <div class="row"><span class="label">pathologist</span><span>Dr. Mervat Qassem</span></div>
+                <hr>
+                <p><strong>External findings:</strong> Burns covering approximately 60% of body surface. Single blunt-force contusion on the right temple, 3.5cm. The report attributes this to falling debris.</p>
+                <p><span class="redacted">Bilateral posterior wrist bruising. Consistent with restraint.</span></p>
+                <p><strong>Toxicology:</strong> <span class="redacted">Succinylcholine metabolites detected. Trace concentration. Rapid-onset paralytic. Classified as post-mortem artifact by reviewing officer.</span></p>
+                <div class="note">※ Neither finding made it into the CID summary. Qassem retired four days later.</div>
+                <p><strong>Official cause of death:</strong> smoke inhalation. accidental.</p>
+            `
+        },
+        // 3
+        {
+            id: "memo_001",
+            title: "internal memo — aatiq yunus resignation",
+            type: "internal memo",
+            date: "22 march 20xx",
+            keywords: ["memo", "jalal", "aatiq", "resignation", "keycard", "access"],
+            content: `
+                <div class="tag">CID/INT-20xx-0044</div>
+                <div class="row"><span class="label">from</span><span>Capt. Jalal Rahimi</span></div>
+                <div class="row"><span class="label">re</span><span>YUNUS, Aatiq — voluntary resignation</span></div>
+                <hr>
+                <p>Detective Yunus submitted his resignation at 03:00 on 22 March. Personal reasons given. I recommend processing without the standard review period.</p>
+                <p>His access to case files should be revoked immediately, with particular attention to the 7-C manifest series. I will review his notes personally before they are filed.</p>
+                <p>Any future contact from Yunus or on his behalf should be routed to my office.</p>
+                <div class="note">※ Processed same day. No exit interview. Keycard logs for 15–19 March flagged that afternoon, deleted three days later.</div>
+            `
+        },
+        // 4
+        {
+            id: "letter_001",
+            title: "letter — N to Jalal",
+            type: "correspondence",
+            date: "04 sep 20xx",
+            keywords: ["letter", "jalal", "N", "acquisition", "partners"],
+            content: `
+                <div class="tag">personal correspondence · recovered from rahimi residence</div>
+                <p><strong>Jalal —</strong></p>
+                <p>Your interest in the boy has been noted. I don't take this kind of arrangement lightly. He's the son of a serving detective. The exposure would be significant for everyone involved.</p>
+                <p>If you're serious, I need a number. Not a range. And I need to understand exactly what you intend to do with him.</p>
+                <p>Do not use this address again. The usual channel.</p>
+                <p>— N.</p>
+            `
+        },
+        // 5
+        {
+            id: "letter_002",
+            title: "letter — Jalal to N",
+            type: "correspondence",
+            date: "17 sep 20xx",
+            keywords: ["letter", "jalal", "N", "aatiq", "quirk", "father", "khalid", "manifest"],
+            content: `
+                <div class="tag">personal correspondence · recovered from rahimi residence</div>
+                <p><strong>N —</strong></p>
+                <p>I  spent a year on this. He trusts me completely. He has no idea what he's worth.</p>
+                <p>His quirk makes him exceptional for what your partners need. Surveillance that leaves no record. Access that raises no flags. Birds go where people cant. To him, I'm his greatest mentor.</p>
+                <p>Beyond the quirk: he is young, unattached, without dependents, no record of dissent. He'll travel willingly if asked by someone he trusts. Hes been conditioned to trust me.</p>
+                <p>The father is the complication. Khalid keeps pulling at the manifest figures. If that becomes untenable, I'll manage it separately.</p>
+                <p>As for my intentions: I haven't fully decided. Some things I want to keep.</p>
+                <p>— J.</p>
+            `
+        },
+        // 6
+        {
+            id: "letter_003",
+            title: "letter — N to Jalal",
+            type: "correspondence",
+            date: "11 dec 20xx",
+            keywords: ["letter", "jalal", "N", "eastern", "withdrawing", "clean"],
+            content: `
+                <div class="tag">personal correspondence · recovered from rahimi residence</div>
+                <p><strong>J —</strong></p>
+                <p>The eastern partners found other arrangements. They're withdrawing.</p>
+                <p>The father situation is your own shit to deal with. I buried the manifest queries for now, but Khalid is persistent. If you don't close this yourself, he'll eventually find the thread. You know what happens when someone finds the thread.</p>
+                <p>Handle it cleanly, or we do it and you lose the commission.</p>
+                <p>— N.</p>
+            `
+        },
+        // 7
+        {
+            id: "letter_004",
+            title: "unsent draft — Jalal",
+            type: "correspondence",
+            date: "undated",
+            keywords: ["letter", "jalal", "unsent", "draft"],
+            content: `
+                <div class="tag">unsent · found inside a desk journal</div>
+                <p><strong>To file —</strong></p>
+                <p>Khalid Yunus died in a fire at the Port of Hidd. That's the official record.</p>
+                <p>The boy resigned and left the country. He's no longer a concern. The matter is closed.</p>
+                <p>— Rahimi</p>
+                <div class="note">※ I need to find Yunus.</div>
+            `
+        },
+        // 7b
+        {
+            id: "letter_005",
+            title: "letter — Jalal to N",
+            type: "correspondence",
+            date: "mar 20xx",
+            keywords: ["letter", "jalal", "N", "khalid", "dealt", "fire"],
+            content: `
+                <div class="tag">personal correspondence · recovered from rahimi residence</div>
+                <p><strong>N —</strong></p>
+                <p>The man will be dealt with. You have my word on it. I don't need your people involved.</p>
+                <p>He asked questions for months. Won't ask ever again after this. The commission stands.</p>
+                <p>Don't contact me until its done.</p>
+                <p>— J.</p>
+                <div class="note">※ Dated three days before the fire.</div>
+            `
+        },
+        // 8
+        {
+            id: "photos_001",
+            title: "photographs — storage unit KY-BOX-01",
+            type: "evidence",
+            date: "20xx",
+            keywords: ["photo", "photograph", "box", "storage", "aatiq", "khalid", "candid", "surveillance"],
+            content: `
+                <div class="tag">found in storage unit registered under khalid's name</div>
+                <div class="photo">📷 01–04 · Pictures of Khalid and Aatiq at the precinct. Aatiq in consultant badge. Smiling in three of them. In the fourth he is looking somewhere off-camera. Khalid is looking at him.</div>
+                <div class="photo">📷 05–07 · Pictures of Aatiq smiling at the camera, holding up a piece sign. First day at the job.</div>
+                <div class="photo">📷 08–10 · Different pictures of the family at the beach. Khalid, Jena, the twins. Both children have the same pose. In one of them, Khalid's hand resting on Aatiq's head.</div>
+                <div class="photo">📷 11 · Khalid and Jalal at a formal ceremony. On the back, in blue ballpoint: "Twenty years." — K.</div>
+                <div class="photo">📷 12–14 · Pictures of Aatiq alone. At his desk. At a window. Leaving the precinct at night. Film grain. Weird angles. These weren't taken by Khalid. Aatiq doesn't know he's being photographed.</div>
+                <div class="note">※ Pictures 12 to 14 are in a separate envelope, sealed, bottom of the box. The dates put them in the two weeks before the fire.</div>
+            `
+        },
+        // 9
+        {
+            id: "khalid_notes",
+            title: "khalid's handwritten notes",
+            type: "personal notes",
+            date: "feb – mar 20xx",
+            keywords: ["khalid", "handwritten", "manifest", "7c", "discrepancy", "calendar"],
+            content: `
+                <div class="tag">three pages · partial arabic shorthand · condition: worn</div>
+                <blockquote>"Manifest 7C — numbers still don't add up. Six months of this. J. keeps saying it's clerical error. Third time I've raised it. No written response."</blockquote>
+                <hr>
+                <p><strong>Calendar entry, 19 March:</strong> <em>"Hidd, 23:00. Don't tell J."</em></p>
+                <hr>
+                <div class="note">※ There's a sealed envelope with it. "For Aatiq. Open if something happens to me." Still sealed. It's not my place to open it. </div>
+                <p>Also in the box: a worn consultant ID lanyard belonging to Aatiq. A child's drawing in crayon, a bird and a man, labeled "me" and "baba."</p>
+            `
+        },
+        // 10
+        {
+            id: "manifest_001",
+            title: "manifest group 7C — discrepancies",
+            type: "shipping record",
+            date: "20xx",
+            keywords: ["manifest", "7c", "discrepancy", "hidd", "port", "shipment"],
+            content: `
+                <div class="tag">port of hidd · customs logs · internal copy</div>
+                <ul>
+                    <li>12 Sep 20xx — −14 units unaccounted</li>
+                    <li>03 Nov 20xx — −22 units unaccounted</li>
+                    <li>18 Dec 20xx — −9 units unaccounted</li>
+                    <li>22 Jan 20xx — −31 units unaccounted</li>
+                    <li>05 Feb 20xx — −17 units unaccounted</li>
+                    <li>14 Mar 20xx — −28 units unaccounted</li>
+                </ul>
+                <p>Anonymous tip received 17 March 20xx citing "irregular activity" at Warehouse 7. Burner phone. Origin: <span class="redacted">unidentified</span>.</p>
+                <div class="note">※ Khalid flagged this twice. Both times it went to Rahimi and came back marked withdrawn. No explanation on file.</div>
+            `
+        },
+        // 11
+        {
+            id: "witness_001",
+            title: "witness statement log",
+            type: "investigation note",
+            date: "20 – 21 mar 20xx",
+            keywords: ["witness", "civilian", "worker", "survivor", "anonymous"],
+            content: `
+                <div class="tag">CID form 88-C · compiled night of incident</div>
+                <p><strong>Civilian worker (unidentified):</strong> Not located. No survivors recovered from Warehouse 7. No personnel assigned to Warehouse 7 on 19 March per port records.</p>
+                <p><strong>Port security logs:</strong> No entry record for Detective Yunus. No exit record.</p>
+                <p><strong>Anonymous tip source:</strong> Burner mobile. Registered outside Bahrain. Records incomplete.</p>
+                <p><strong>First responders:</strong> Arrived 23:58. No witnesses observed entry or exit before structural collapse.</p>
+                <div class="note">※ How did nobody see him go in? It doesn't make sense. </div>
+            `
+        },
+        // 12
+        {
+            id: "timeline_001",
+            title: "timeline",
+            type: "compiled",
+            date: "20xx",
+            keywords: ["timeline", "dates", "september", "march", "sequence"],
+            content: `
+                <div class="tag">compiled — cross-referenced where possible</div>
+
+                <div style="margin-top:0.5rem;">
+
+                    <!-- PHASE 1 -->
+                    <div style="font-family:'IBM Plex Mono',monospace;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:0.6rem;">phase i — months before</div>
+
+                    <div style="display:grid;grid-template-columns:90px 1fr;gap:0;position:relative;">
+
+                        <div style="position:absolute;left:89px;top:8px;bottom:0;width:1px;background:var(--rule-light);"></div>
+
+                        <div style="font-family:'IBM Plex Mono',monospace;font-size:0.67rem;color:var(--ink-faint);padding:0.35rem 0.6rem 0.35rem 0;text-align:right;line-height:1.4;">Sep – Dec</div>
+                        <div style="padding:0.3rem 0 0.3rem 0.85rem;border-left:2px solid var(--rule);font-size:0.88rem;line-height:1.55;color:var(--ink-mid);">Jalal and N exchange letters regarding Aatiq. N notes Khalid is <em>"beginning to ask questions."</em></div>
+
+                        <div style="grid-column:1/3;height:0.75rem;display:flex;align-items:center;justify-content:flex-end;padding-right:6px;">
+                            <span style="font-family:'IBM Plex Mono',monospace;font-size:0.58rem;color:var(--rule);letter-spacing:0.05em;padding-right:0.85rem;">↓ months pass</span>
+                        </div>
+
+                        <div style="font-family:'IBM Plex Mono',monospace;font-size:0.67rem;color:var(--ink-faint);padding:0.35rem 0.6rem 0.35rem 0;text-align:right;line-height:1.4;">Feb – Mar</div>
+                        <div style="padding:0.3rem 0 0.3rem 0.85rem;border-left:2px solid var(--rule);font-size:0.88rem;line-height:1.55;color:var(--ink-mid);">Khalid submits two formal queries about Manifest 7C. No written response either time.</div>
+
+                    </div>
+
+                    <!-- PHASE BREAK -->
+                    <div style="display:flex;align-items:center;gap:0.6rem;margin:0.9rem 0 0.75rem;padding-left:90px;">
+                        <div style="flex:1;height:1px;background:var(--ink);opacity:0.15;"></div>
+                        <span style="font-family:'IBM Plex Mono',monospace;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-faint);">phase ii — seven days</span>
+                        <div style="flex:1;height:1px;background:var(--ink);opacity:0.15;"></div>
+                    </div>
+
+                    <!-- PHASE 2 -->
+                    <div style="display:grid;grid-template-columns:90px 1fr;gap:0;position:relative;">
+
+                        <div style="position:absolute;left:89px;top:8px;bottom:0;width:1px;background:var(--rule-light);"></div>
+
+                        <div style="font-family:'IBM Plex Mono',monospace;font-size:0.67rem;color:var(--ink-faint);padding:0.35rem 0.6rem 0.35rem 0;text-align:right;line-height:1.4;">17 Mar</div>
+                        <div style="padding:0.3rem 0 0.3rem 0.85rem;border-left:2px solid var(--rule);font-size:0.88rem;line-height:1.55;color:var(--ink-mid);">Anonymous tip about Warehouse 7 received at the precinct.</div>
+
+                        <div style="grid-column:1/3;height:0.5rem;"></div>
+
+                        <!-- Night of 19 Mar cluster -->
+                        <div style="font-family:'IBM Plex Mono',monospace;font-size:0.67rem;color:var(--red);padding:0.35rem 0.6rem 0.35rem 0;text-align:right;line-height:1.4;opacity:0.8;">19 Mar<br>23:15</div>
+                        <div style="padding:0.3rem 0 0.3rem 0.85rem;border-left:2px solid var(--red);opacity:0.85;font-size:0.88rem;line-height:1.55;color:var(--ink-mid);">According to Rahimi, Khalid calls him. Says he is already at Port of Hidd. Rahimi claims he told him to wait.</div>
+
+                        <div style="font-family:'IBM Plex Mono',monospace;font-size:0.67rem;color:var(--red);padding:0.35rem 0.6rem 0.35rem 0;text-align:right;line-height:1.4;opacity:0.8;">19 Mar<br>23:40</div>
+                        <div style="padding:0.3rem 0 0.3rem 0.85rem;border-left:2px solid var(--red);opacity:0.85;font-size:0.88rem;line-height:1.55;color:var(--ink-mid);">Fire reported at Warehouse 7.</div>
+
+                        <div style="font-family:'IBM Plex Mono',monospace;font-size:0.67rem;color:var(--red);padding:0.35rem 0.6rem 0.35rem 0;text-align:right;line-height:1.4;opacity:0.8;">20 Mar<br>01:15</div>
+                        <div style="padding:0.3rem 0 0.3rem 0.85rem;border-left:2px solid var(--red);opacity:0.85;font-size:0.88rem;line-height:1.55;color:var(--ink-mid);">Khalid's body recovered from the structure.</div>
+
+                        <div style="grid-column:1/3;height:0.5rem;"></div>
+
+                        <!-- Cover-up sequence -->
+                        <div style="font-family:'IBM Plex Mono',monospace;font-size:0.67rem;color:var(--ink-faint);padding:0.35rem 0.6rem 0.35rem 0;text-align:right;line-height:1.4;">21 Mar</div>
+                        <div style="padding:0.3rem 0 0.3rem 0.85rem;border-left:2px solid var(--rule);font-size:0.88rem;line-height:1.55;color:var(--ink-mid);">Autopsy conducted. Wrist bruising documented. Succinylcholine metabolites noted.</div>
+
+                        <div style="font-family:'IBM Plex Mono',monospace;font-size:0.67rem;color:var(--ink-faint);padding:0.35rem 0.6rem 0.35rem 0;text-align:right;line-height:1.4;">22 Mar<br>03:00</div>
+                        <div style="padding:0.3rem 0 0.3rem 0.85rem;border-left:2px solid var(--rule);font-size:0.88rem;line-height:1.55;color:var(--ink-mid);">Aatiq submits resignation by written notice.</div>
+
+                        <div style="font-family:'IBM Plex Mono',monospace;font-size:0.67rem;color:var(--ink-faint);padding:0.35rem 0.6rem 0.35rem 0;text-align:right;line-height:1.4;">22 Mar</div>
+                        <div style="padding:0.3rem 0 0.3rem 0.85rem;border-left:2px solid var(--rule);font-size:0.88rem;line-height:1.55;color:var(--ink-mid);">Incident report filed and case closed — both within hours — by Rahimi.</div>
+
+                        <div style="font-family:'IBM Plex Mono',monospace;font-size:0.67rem;color:var(--ink-faint);padding:0.35rem 0.6rem 0.35rem 0;text-align:right;line-height:1.4;">25 Mar</div>
+                        <div style="padding:0.3rem 0 0.3rem 0.85rem;border-left:2px solid var(--rule);font-size:0.88rem;line-height:1.55;color:var(--ink-mid);">Aatiq's keycard logs deleted. Dr. Qassem submits retirement papers.</div>
+
+                    </div>
+
+                </div>
+            `
+        },
+        // 13
+        {
+            id: "aatiq_file",
+            title: "aatiq yunus — personnel file",
+            type: "personnel",
+            date: "20xx",
+            keywords: ["aatiq", "consultant", "personnel", "keycard"],
+            content: `
+                <div class="tag">SC-20xx-088</div>
+                <div class="row"><span class="label">hired</span><span>June 20xx</span></div>
+                <div class="row"><span class="label">supervisor</span><span>Capt. Jalal Rahimi</span></div>
+                <div class="row"><span class="label">status</span><span>Resigned — 22 Mar 20xx</span></div>
+                <hr>
+                <p><strong>Performance notes (Rahimi):</strong> "Exceptional attention to detail. Responds well to direct feedback. Regularly stays late without prompting. May require additional management given <span class="redacted">emotional sensitivity</span>."</p>
+                <p><strong>Keycard access logs (15–19 Mar):</strong> <span class="redacted">Flagged for deletion 22 March. Deleted 25 March. No backup exists.</span></p>
+                <div class="note">※ No exit interview. His badge was never returned. I found it with Khalid's belongings. </div>
+            `
+        },
+        // 14
+        {
+            id: "jalal_status",
+            title: "captain jalal rahimi — last known status",
+            type: "personnel",
+            date: "20xx",
+            keywords: ["jalal", "rahimi", "captain", "active", "retirement", "status"],
+            content: `
+                <div class="tag">as of last update</div>
+                <div class="row"><span class="label">rank</span><span>Captain</span></div>
+                <div class="row"><span class="label">service</span><span>23+ years</span></div>
+                <div class="row"><span class="label">status</span><span>Active — nearing pension eligibility</span></div>
+                <hr>
+                <p>Distinguished Service Medal (20xx). No disciplinary record on file. No open investigations.</p>
+                <div class="note">※ Two internal queries raised, both closed without action. File access unchanged last I checked.</div>
+            `
+        },
+        // 15
+        {
+            id: "box_summary",
+            title: "storage unit contents — KY-BOX-01",
+            type: "inventory",
+            date: "20xx",
+            keywords: ["box", "storage", "khalid", "envelope", "lanyard", "drawing"],
+            content: `
+                <div class="tag">unit payments confirmed through 20xx · status unknown after</div>
+                <ul>
+                    <li>14 photographs (see: photographs file)</li>
+                    <li>Handwritten case notes, 3 pages</li>
+                    <li>Personal calendar, 20xx</li>
+                    <li>One sealed envelope — <em>"For Aatiq. Open if something happens to me"</em></li>
+                    <li>Worn lanyard; Aatiq's consultant ID, issued June 20xx</li>
+                    <li>Child's drawing.</li>
+                </ul>
+                <div class="note">※ Payments continued after his death. Last confirmed: 20xx. No name attached to the account.</div>
+            `
+        },
+        // 16
+        {
+            id: "amal_note",
+            title: "handwritten note — amal yunus",
+            type: "personal",
+            date: "undated",
+            keywords: ["amal", "asfoorah", "sister", "family"],
+            content: `
+                <div class="tag">Addressed to me.</div>
+                <div class="handwriting">
+                <p>My name is Amal Yunus. Pro hero, license number [redacted.] Callsign: Asfoorah. I am Khalid Yunus's daughter. Aatiq's twin.</p>
+                <p>My father died in a fire at the Port of Hidd. The report says it was an accident. Something is wrong.</p>
+                <p>Aatiq worked at the same precinct. After the funeral, he went quiet, wouldn't eat, wouldn't leave his room, wouldn't look at me. Then one day he was fine. Too fine. He said he was going to travel. That was the last I saw him properly.</p>
+                <p>I've been asking questions for years. Everyone tells me to let it go.</p>
+                <p>Please. Look at it properly.</p>
+                </div>
+                <div class="note">※ I won't let you down, Asfoorah.</div>
+            `
+        },
+        // 17
+        {
+            id: "retired_officer",
+            title: "conversation with a retired detective",
+            type: "interview",
+            date: "20xx",
+            keywords: ["interview", "officer", "anonymous"],
+            content: `
+                <div class="tag">requested anonymity · will not provide written statement</div>
+                <blockquote>"Everyone saw how Jalal was with the Yunus boy. Always in his office, always after hours. We thought it was about the father... Khalid was well-liked. But he didn't treat anyone else like that. Not once."</blockquote>
+                <blockquote>"It closed too fast. Three days. I've never seen a death in the department go that quick. I asked about it. Someone called me at home and told me to drop it."</blockquote>
+                <blockquote>"I've worked here over twenty years, I've processed a lot of resignations. They don't do that. Process a registration that fast."</blockquote>
+                <div class="note">※ Won't put it in writing. But nothing he said contradicts the documents.</div>
+            `
+        },
+        // 18
+        {
+            id: "press_heroic",
+            title: "al-ayyam — 22 march 20xx",
+            type: "press clipping",
+            date: "22 mar 20xx",
+            keywords: ["press", "newspaper", "heroic", "al-ayyam"],
+            content: `
+                <div class="tag">front page · morning edition</div>
+                <p><strong>"Detective Killed in Port Fire Hailed as Hero"</strong></p>
+                <p>Detective Khalid Yunus died early Thursday after re-entering a burning Hidd warehouse to rescue a trapped port worker, officials confirmed. He was posthumously commended by the Minister of Interior at a brief ceremony that same afternoon.</p>
+                <p>Captain Jalal Rahimi, his commanding officer and close friend of twenty years, called him "an exemplary officer and an irreplaceable partner."</p>
+                <p>The fire's cause remains under review. No foul play is suspected.</p>
+                <div class="note">※ For the fire so big, there's not much articles written about it.</div>
+            `
+        },
+        // 19
+        {
+            id: "press_asfoorah",
+            title: "gulf daily news — august 20xx",
+            type: "press clipping",
+            date: "aug 20xx",
+            keywords: ["amal", "asfoorah", "port", "safety", "donation"],
+            content: `
+                <div class="tag">hero & public affairs · page 4</div>
+                <p><strong>"Pro Hero Asfoorah Donates Full Prize Earnings to Port Worker Safety Fund"</strong></p>
+                <p>Bahraini hero Asfoorah announced today that she'll be donating her entire annual prize allocation to a fund supporting improved safety conditions for workers at the Port of Hidd.</p>
+                <p>"There are workers at that port who deserve better," she said. "I hope this is a start."</p>
+                <div class="note">※ That port. She picked that one.</div>
+            `
+        },
+        // 20
+        {
+            id: "press_medal",
+            title: "ministry press release — february 20xx",
+            type: "press clipping",
+            date: "feb 20xx",
+            keywords: ["jalal", "medal", "distinguished service", "award"],
+            content: `
+                <div class="tag">ministry of interior · official release</div>
+                <p>Captain Jalal Rahimi was awarded the Distinguished Service Medal at a closed ceremony this week. Director Al-Nassar cited his "unwavering commitment to institutional integrity" and "exemplary leadership during a period of significant operational pressure."</p>
+                <p>At time of writing, Rahimi oversees all CID operations relating to the Port of Hidd jurisdiction.</p>
+                <div class="note">※ Same year the Yunus case was archived...</div>
+            `
+        },
+        // 21
+        {
+            id: "identity_N",
+            title: "who is N?",
+            type: "investigation note",
+            date: "20xx",
+            keywords: ["N", "identity", "unknown"],
+            content: `
+                <div class="tag">no confirmed identification</div>
+                <ul>
+                    <li>Corresponded with Jalal between Sep and Dec 20xx</li>
+                    <li>Operated as intermediary for the "eastern partners"</li>
+                    <li>Had documented access to someone capable of burying official records</li>
+                    <li>Held leverage over Jalal... could withdraw his commission at will</li>
+                </ul>
+                <p><strong>Physical evidence:</strong> Handwriting analysis inconclusive. Paper is standard commercial grade. No fingerprints recovered except Jalal's own, and one thats unidentified.</p>
+                <div class="note">※ Every lead stops at the same point. I'm finding nothing.</div>
+            `
+        },
+        // 22
+        {
+            id: "jena_statement",
+            title: "jena yunus — mother",
+            type: "interview",
+            date: "20xx",
+            keywords: ["jena", "mother", "family", "khalid", "aatiq"],
+            content: `
+                <div class="tag">spoke briefly · asked me to leave after twenty minutes</div>
+                <blockquote>"Khalid was a good husband and father. He loved those children more than anything. Aatiq was always following him around as a boy. Wanted to do everything he did."</blockquote>
+                <blockquote>"There was a period, before everything happened, when men would come to the house. Not often. Three, maybe four times. Always when Khalid was working nights. They would sit with Aatiq for an hour and then leave. I asked him who they were. He said colleagues of Captain Rahimi. He seemed... proud, almost. I didn't push it. Should I have...? Have I been a terrible mother...?"</blockquote>
+                <blockquote>"After Khalid died, Aatiq changed. He went very quiet and then he went very far away. Whatever happened at that precinct... I just wish Aatiq would tell us."</blockquote>
+                <blockquote>"The last time I saw him before he left, he held my hands for a long time. He didn't say anything. He just held them."</blockquote>
+                <div class="note">※ She looked on the verge of tears when I spoke to her. I don't think you were a bad mother, Auntie. You couldn't have known.</div>
+            `
+        },
+        // 23
+        {
+            id: "cinder_info",
+            title: "cinder — adoptive brother",
+            type: "note",
+            date: "20xx",
+            keywords: ["cinder", "adoptive", "brother", "family"],
+            content: `
+                <div class="tag">limited information available</div>
+                <p>The Yunus family has an adoptive son known as Cinder. He and Aatiq were close growing up. I don't know where to place him in all of this.</p>
+                <p>Appears in family photographs and some early records. No formal statement obtained. Will attempt to conract.</p>
+                <div class="note">※ He might know something. Haven't been able to reach him.</div>
+            `
+        },
+        // 24
+        {
+            id: "precinct_rumors",
+            title: "things heard around the precinct",
+            type: "compiled notes",
+            date: "20xx",
+            keywords: ["precinct", "rumors", "officers"],
+            content: `
+                <div class="tag">sourced from former officers · unverified</div>
+                <ul>
+                    <li>"Jalal kept a photograph of Khalid and Aatiq on his desk. After Khalid died, he used to just sit and look at it."</li>
+                    <li>"Aatiq stopped taking lunch breaks. Spent the time in Jalal's office instead. We all thought it was strange, but no one said anything."</li>
+                    <li>"The night of the fire, Jalal was completely calm when he came in to file the report."</li>
+                    <li>"Aatiq's resignation came in at 3am. Who drafts a resignation letter at 3am?"</li>
+                    <li>"After Aatiq left, Jalal cleared the desk himself. Wouldn't let anyone else near it."</li>
+                </ul>
+                <div class="note">※ Not verified. But consistent.</div>
+            `
+        },
+        // 25
+        {
+            id: "port_worker",
+            title: "night shift worker at the port",
+            type: "interview",
+            date: "20xx",
+            keywords: ["port", "worker", "hidd", "warehouse", "night"],
+            content: `
+                <div class="tag">anonymous · refused to give his name</div>
+                <blockquote>"Warehouse 7 was always different from the others. More security. Different people coming and going at odd hours. We all knew not to ask questions about it."</blockquote>
+                <blockquote>"The night of the fire, I heard a car engine. Just a car, running quietly, maybe twenty minutes before the alarms went off. Then it was gone, and I didn't think much of it until later."</blockquote>
+                <blockquote>"After the fire, they cleared out Warehouse 7 within a week. Completely emptied."</blockquote>
+                <div class="note">※ Twenty minutes before the alarms, a car left...</div>
+            `
+        },
+        // 26
+        {
+            id: "succinylcholine_note",
+            title: "succinylcholine",
+            type: "research note",
+            date: "20xx",
+            keywords: ["succinylcholine", "paralytic", "medical", "access"],
+            content: `
+                <div class="tag">looked into this</div>
+                <p>Rapid-onset neuromuscular blocking agent. Used in clinical settings for surgical intubation. Causes full muscle paralysis within 60 seconds of administration. Clears the system within 5–10 minutes, leaving only metabolite traces.</p>
+                <p><strong>Access:</strong> Controlled. Limited to hospitals and licensed medical facilities. Not something a police consultant, or most police, could obtain through normal channels.</p>
+                <p>The autopsy found trace metabolites. Not a lethal concentration. But enough to confirm it was present in his system before he died.</p>
+                <div class="note">※ If he couldn't move when it started...</div>
+            `
+        },
+        // 28
+        {
+            id: "phone_call",
+            title: "the 23:15 phone call",
+            type: "investigation note",
+            date: "20xx",
+            keywords: ["phone call", "23:15", "jalal", "timeline"],
+            content: `
+                <div class="tag">nothing about this adds up</div>
+                <ul>
+                    <li>No phone records were ever produced. Jalal was never asked to provide them formally.</li>
+                    <li>If Khalid called anyone, why only Jalal? Not his partner. Not dispatch. Not anyone who would have logged it.</li>
+                    <li>Port security has no entry record for Yunus that evening. If he was there at 23:15, he arrived without anyone seeing him.</li>
+                    <li>Fire starts at 23:40. Twenty-five minutes after the supposed call. What was Khalid doing in a dark warehouse alone for twenty-five minutes?</li>
+                </ul>
+                <div class="note">※ Only one source for this... </div>
+            `
+        },
+        // 29
+        {
+            id: "missing_evidence",
+            title: "what's missing",
+            type: "investigation note",
+            date: "20xx",
+            keywords: ["missing", "evidence", "gaps"],
+            content: `
+                <div class="tag">gaps in the official record</div>
+                <ul>
+                    <li>Phone records from 19 March — never produced</li>
+                    <li>Aatiq's keycard logs, 15–19 March — deleted</li>
+                    <li>The anonymous tipster's identity — unresolved</li>
+                    <li>The civilian worker Khalid supposedly died saving — never identified, never found</li>
+                    <li>Dr. Qassem's full autopsy notes — only a summary exists; original not on file</li>
+                    <li>Any physical record of Khalid entering the port that night — none</li>
+                </ul>
+                <div class="note">※ too many gaps for a closed case.</div>
+            `
+        },
+        // 30
+        {
+            id: "questions",
+            title: "open questions",
+            type: "note to self",
+            date: "20xx",
+            keywords: ["questions", "unanswered"],
+            content: `
+                <div class="tag">still unresolved</div>
+                <ul>
+                    <li>Who is N?</li>
+                    <li>Who took the surveillance photographs of Aatiq?</li>
+                    <li>Where did the succinylcholine come from, and who administered it?</li>
+                    <li>Was there ever a civilian worker in Warehouse 7 that night?</li>
+                    <li>How much does Aatiq know?</li>
+                    <li>What is inside the envelope Khalid left for him?</li>
+                </ul>
+                <div class="note">※ I've been getting phonecalls from unknown numbers. I'm running out of time.</div>
+            `
+        },
+        // 31
+        {
+            id: "qassem_whereabouts",
+            title: "dr. mervat qassem — after retirement",
+            type: "note",
+            date: "20xx",
+            keywords: ["qassem", "pathologist", "retired", "autopsy"],
+            content: `
+                <div class="tag">attempted contact twice</div>
+                <p>Qassem retired from the Forensic Medicine Directorate four days after signing off on the Yunus autopsy. She was only 54... early by any standard. No public statement given.</p>
+                <p>She's believed to be living outside Bahrain. Current location not confirmed.</p>
+                <p>Second contact attempt: letter sent to her last known address. Returned unopened.</p>
+                <div class="note">※ She signed off on a report that wasn't complete. She's the only one who knows what the full notes said. I don't know if she'd talk even if I found her.</div>
+            `
+        },
+        // 32
+        {
+            id: "warehouse_7_history",
+            title: "warehouse 7 — prior use",
+            type: "research note",
+            date: "20xx",
+            keywords: ["warehouse", "hidd", "port", "7", "history", "cargo"],
+            content: `
+                <div class="tag">pulled from port authority records</div>
+                <p>Warehouse 7 was operated under a rotating series of short-term commercial leases from 20xx onward. Leaseholders changed every 6–14 months. Several of the named companies can't be traced to active business registrations.</p>
+                <p>At the time of the fire, the registered leaseholder was <span class="redacted">a limited liability entity registered in a third country</span>. The lease was dissolved within 48 hours of the incident.</p>
+                <p>Manifest Group 7C, the series Khalid was investigating, corresponds entirely to goods logged under this warehouse's rotation.</p>
+                <div class="note">※ Shell companies, fast turnover, gone within 48 hours of the fire...</div>
+            `
+        },
+        // 33
+        {
+            id: "aatiq_letter_fragment",
+            title: "letter fragment — aatiq to unknown recipient",
+            type: "personal",
+            date: "approx. two weeks before departure",
+            keywords: ["aatiq", "letter", "fragment", "unsent", "imrik"],
+            content: `
+                <div class="tag">recovered from a discarded draft · partial only</div>
+                <div class="handwriting">
+                <p>Imrik. I don't know what's going on anymore. He's gone.</p>
+                <p>I trusted him. For a long time. And now I keep trying to work out what was real and I can't. I actually can't.</p>
+                <p>My father's dead. The official version says accident. I don't think that's true. I haven't thought so since the night they told me. But I don't know what you do with that.</p>
+                <p>I can't continue like this. Being a fuckup. I can't keep fucking up. I think I should lea</p>
+                </div>
+                <div class="note">※ Torn and left in a bin. Someone kept it anyway, and taped it together. Imrik seems to be a friend. </div>
+            `
+        },
+        // 34
+        {
+            id: "financial_anomaly",
+            title: "financial anomaly — rahimi personal accounts",
+            type: "investigation note",
+            date: "20xx",
+            keywords: ["rahimi", "jalal", "money", "financial", "account", "transfer"],
+            content: `
+                <div class="tag">source: anonymous · documents not yet verified</div>
+                <p>Deposits totaling a significant sum were made to a personal account in Rahimi's name between Sep 20xx and Mar 20xx — the same window as his correspondence with N.</p>
+                <p>The deposits are irregular: different amounts, different intervals. Not a salary. Not consistent with any known secondary income.</p>
+                <p>The account was closed in May 20xx. Two months after the fire.</p>
+                <div class="note">※ Not verified. Can't use it yet. But if the records are real, it connects.</div>
+            `
+        },
+        // 35
+        {
+            id: "aatiq_bird",
+            title: "note — the bird",
+            type: "note to self",
+            date: "20xx",
+            keywords: ["aatiq", "bird", "detail", "quirk"],
+            content: `
+                <div class="tag">small thing. i keep thinking about it.</div>
+                <p>Khalid's box has a child's drawing in it, the drawing in crayon.</p>
+                <p>The paper is old. Crayon worn down. Khalid was still paying the storage fees when he died.</p>
+                <p>He knew something was wrong with Jalal and his son's relationship. Why didn't he use his quirk on Aatiq to ask?</p>
+                <div class="note">※ Probably not relevant. I just keep thinking about it.</div>
+            `
+        },
+        // 36
+        {
+            id: "aatiq_casework",
+            title: "aatiq yunus — case contributions",
+            type: "compiled notes",
+            date: "20xx",
+            keywords: ["aatiq", "casework", "quirk", "birds", "detective", "work"],
+            content: `
+                <div class="tag">reconstructed from informal records · no official case log exists</div>
+                <p>Aatiq joined as a junior detective on his father's recommendation. By most accounts he worked hard to earn the position independent of his connections; arrived early, stayed late, cross-referenced files no one asked him to cross-reference.</p>
+                <p>His quirk, communication with birds, was never formally logged as an operational asset. No documentation exists of it being used in any official capacity. What exists is circumstantial: case closures that shouldn't have moved as fast as they did, surveillance gaps filled without explanation, information that had no human source on record.</p>
+                <hr>
+                <p><strong>Case 7-11:</strong> Missing persons, commercial district. Closed in eleven days. Standard resolution time: six to eight weeks. No informant listed. Aatiq's name appears in the margin of one internal note: <em>"confirmed via A.Y."</em></p>
+                <p><strong>Case 12-04:</strong> Suspected smuggling, eastern port access road. Lead sourced to a specific vehicle, specific window. The sourcing method is not documented. Rahimi signed off personally.</p>
+                <p><strong>Case 14-19:</strong> Theft, bonded warehouse. Aatiq flagged an entry point that ground teams had missed. His explanation, on record: <em>"I checked the roof access."</em> There is no record of him having clearance to be on the roof.</p>
+                <div class="note">※ Three cases. There are probably more I haven't found. The pattern is consistent though: the results, without explaining their method. Rahimi always signed off. Nothing ever went to a formal report with Aatiq's contribution named.</div>
+            `
+        },
+        // 37
+        {
+            id: "jalal_mentorship",
+            title: "the mentorship — as it appeared",
+            type: "compiled notes",
+            date: "20xx",
+            keywords: ["jalal", "aatiq", "mentorship", "office", "trust"],
+            content: `
+                <div class="tag">sourced from precinct staff · retired officer · jena yunus</div>
+                <p>By all external accounts, Jalal Rahimi took Aatiq Yunus under his wing in a way that seemed, at the time, unremarkable. The son of a well-regarded colleague. A young man trying to find his footing. It looked like generosity.</p>
+                <p>What has been documented, across multiple sources:</p>
+                <ul>
+                    <li>Private meetings in Rahimi's office, outside working hours, beginning within Aatiq's first month</li>
+                    <li>Rahimi advocating for Aatiq to be assigned to sensitive cases early, unusual for someone so junior</li>
+                    <li>Rahimi personally reviewing Aatiq's case notes before they were filed, and in some instances, before Khalid saw them</li>
+                    <li>Gifts: a watch in the first year, noted by two colleagues. Books. At least one dinner out, just the two of them.</li>
+                    <li>Rahimi referring to Aatiq in conversation as <em>"my best one"</em>, witnessed by a civilian staff member who noted it as unusual</li>
+                </ul>
+                <p>Jena Yunus described Aatiq during this period as <em>"proud."</em> He spoke of Rahimi often. He seemed, she said, to feel chosen.</p>
+                <div class="note">※ With the letters in mind, I don't like the thought of what might've become of Aatiq if he'd decided to stay.</div>
+            `
+        },
+        // 38
+        {
+            id: "eastern_partners",
+            title: "the eastern partners — what is known",
+            type: "investigation note",
+            date: "20xx",
+            keywords: ["eastern", "partners", "network", "N", "trafficking", "acquisitions"],
+            content: `
+                <div class="tag">very little confirmed · don't treat as established</div>
+                <p>N refers to them three times across the correspondence. "The eastern partners." Always plural. Its as if N too is a middleman, not a principal.</p>
+                <p>What can be inferred:</p>
+                <ul>
+                    <li>They operate across borders. The word "acquisitions" appears in N's first letter. Interesting choice of word.</li>
+                    <li>They withdrew in December 20xx, described as having "found other arrangements." Whatever they thought they could get from Aatiq, they sourced it elsewhere.</li>
+                    <li>The Warehouse 7 cargo, Manifest 7C, may have been a separate operation entirely, or may have been infrastructure for the same network. No connections confirmed.</li>
+                </ul>
+                <div class="note">※ I don't know what they move. I don't know where they are yet. The withdrawal letter suggests they have reach and options. That's all I have.</div>
+            `
+        },
+        // 39
+        {
+            id: "imrik_presence",
+            title: "imrik abd-almanaf",
+            type: "interview",
+            date: "20xx",
+            keywords: ["imrik", "friend", "interview", "researcher"],
+            content: `
+                <div class="tag">he is still here</div>
+                <p>Respectfully, Imrik is a weird man.</p>
+                <p>I've been able to reach him directly, and conducted a short interview with him. He didn't have anything important to say about the case itself.</p>
+                <p>But an interesting thing he mentioned were Aatiq's eyes. Something about them feeling different.</p>
+                <p>He also knew where Aatiq was while Jena and Amal didn't. There's a certain closeness to them that could work to our benefit.</p>
+                <div class="note">※ Leaving this here. Not ready to push on it yet. Something about it needs to be handled carefully.</div>
+            `
+        },
+        // 40
+        {
+            id: "compiler_note",
+            title: "a note on this file",
+            type: "note to self",
+            date: "20xx",
+            keywords: ["compiler", "file", "investigation", "unknown", "warning"],
+            content: `
+                <div class="tag">found at the front of the physical folder · undated</div>
+                <div class="handwriting">
+                <p>If you are reading this, I am either very paranoid or no longer able to give it to you myself.</p>
+                <p>I've tried to be careful about what I put in here and what I left out. There are things I know that aren't written down. I thought that was safer. I'm not sure now.</p>
+                <p>The people this file concerns are still active. Rahimi still has his position. N has never been identified. Whatever the eastern partners were moving through Hidd... I don't know if it stopped.</p>
+                <p>Aatiq Yunus is alive, as far as I know. He left.</p>
+                <p>Khalid Yunus was a detective who found something he wasn't supposed to find.</p>
+                <p>I don't know what to do with any of this. I only know it's important.</p>
+                <p>Whether by me or someone else, I wish this case would come to light one day. For the Yunus' family's sake.</p>
+                </div>
+            `
+        }
+    ];
+
+    // Cross-reference map: meaningful connections between documents
+    const CONNECTIONS = {
+        "incident_001":       ["autopsy_001", "witness_001", "khalid_notes", "warehouse_7_history"],
+        "autopsy_001":        ["incident_001", "qassem_whereabouts", "evidence_gaps"],
+        "memo_001":           ["aatiq_file", "aatiq_letter_fragment", "precinct_rumors"],
+        "letter_001":         ["letter_002", "letter_003", "identity_N"],
+        "letter_002":         ["letter_001", "letter_003", "aatiq_file", "financial_anomaly"],
+        "letter_003":         ["letter_001", "letter_002", "manifest_001", "financial_anomaly"],
+        "letter_004":         ["incident_001", "memo_001"],
+        "letter_005":         ["letter_003", "letter_004", "incident_001", "phone_call"],
+        "photos_001":         ["aatiq_file", "precinct_rumors", "aatiq_bird"],
+        "khalid_notes":       ["manifest_001", "box_summary", "incident_001"],
+        "manifest_001":       ["incident_001", "warehouse_7_history", "financial_anomaly"],
+        "witness_001":        ["incident_001", "port_worker"],
+        "timeline_001":       ["incident_001", "autopsy_001", "memo_001"],
+        "aatiq_file":         ["memo_001", "letter_002", "aatiq_letter_fragment", "photos_001"],
+        "jalal_status":       ["press_medal", "financial_anomaly", "letter_001"],
+        "box_summary":        ["khalid_notes", "photos_001", "aatiq_bird"],
+        "amal_note":          ["press_asfoorah", "jena_statement", "aatiq_bird"],
+        "retired_officer":    ["memo_001", "precinct_rumors", "jalal_status"],
+        "press_heroic":       ["incident_001", "autopsy_001"],
+        "press_asfoorah":     ["amal_note", "incident_001"],
+        "press_medal":        ["jalal_status", "financial_anomaly"],
+        "identity_N":         ["letter_001", "letter_002", "letter_003", "financial_anomaly"],
+        "jena_statement":     ["aatiq_file", "letter_002", "amal_note"],
+        "cinder_info":        ["amal_note", "jena_statement"],
+        "precinct_rumors":    ["memo_001", "retired_officer", "aatiq_letter_fragment"],
+        "port_worker":        ["incident_001", "warehouse_7_history", "witness_001"],
+        "evidence_gaps":      ["autopsy_001", "aatiq_file", "questions"],
+        "questions":          ["identity_N", "evidence_gaps", "aatiq_letter_fragment"],
+        "qassem_whereabouts": ["autopsy_001", "evidence_gaps"],
+        "warehouse_7_history":["manifest_001", "incident_001", "port_worker"],
+        "aatiq_letter_fragment":["aatiq_file", "memo_001", "precinct_rumors"],
+        "financial_anomaly":  ["letter_002", "letter_003", "press_medal", "jalal_status"],
+        "aatiq_bird":         ["box_summary", "photos_001", "amal_note"],
+        "aatiq_casework":     ["aatiq_file", "jalal_mentorship", "photos_001", "memo_001"],
+        "jalal_mentorship":   ["aatiq_casework", "letter_002", "precinct_rumors", "jena_statement"],
+        "eastern_partners":   ["letter_001", "letter_002", "letter_003", "identity_N", "warehouse_7_history"],
+        "imrik_presence":     ["aatiq_letter_fragment"],
+        "compiler_note":      ["amal_note", "questions", "evidence_gaps"],
+    };
+
+    let discoveredIds = new Set();
+    let readIds = new Set();
+    let failedSearches = [];
+
+    // Mark a card as read after it's been visible for 2 seconds
+    const readObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const id = entry.target.dataset.id;
+                if (id && !readIds.has(id)) {
+                    setTimeout(() => {
+                        if (readIds.has(id)) return;
+                        readIds.add(id);
+                        entry.target.classList.add('read');
+                    }, 2000);
+                }
+            }
+        });
+    }, { threshold: 0.2 });
+
+    function resetState() {
+        discoveredIds.clear();
+        readIds.clear();
+        failedSearches = [];
+        updateUI();
+        renderResults([]);
+        document.getElementById('searchInput').value = '';
+        document.getElementById('resultCount').textContent = '—';
+    }
+
+    function performSearch(query) {
+        if (!query || query.trim() === '') {
+            renderResults([]);
+            return;
+        }
+
+        const terms = query.toLowerCase().split(/[\s,]+/).filter(t => t.length > 0);
+
+        const matches = DOCUMENTS.filter(doc =>
+            terms.some(term =>
+                doc.keywords.some(kw => kw === term || kw.split(' ').includes(term)) ||
+                doc.title.toLowerCase().split(/\W+/).includes(term)
+            )
+        );
+
+        if (matches.length === 0) {
+            if (!failedSearches.includes(query.toLowerCase())) {
+                failedSearches.unshift(query.toLowerCase());
+                if (failedSearches.length > 5) failedSearches.pop();
+            }
+            renderResults([], true);
+        } else {
+            matches.forEach(doc => discoveredIds.add(doc.id));
+            renderResults(DOCUMENTS.filter(doc => discoveredIds.has(doc.id)));
+        }
+        updateUI();
+    }
+
+    function buildSeeAlso(docId) {
+        const related = CONNECTIONS[docId];
+        if (!related || related.length === 0) return '';
+
+        const items = related
+            .filter(relId => discoveredIds.has(relId))
+            .map(relId => {
+                const relDoc = DOCUMENTS.find(d => d.id === relId);
+                if (!relDoc) return '';
+                return `<button class="see-also-link" onclick="searchFor('${relDoc.keywords[0]}')">${relDoc.title}</button>`;
+            }).filter(Boolean);
+
+        if (items.length === 0) return '';
+        return `<div class="see-also"><span class="see-also-label">connected ·</span>${items.join('<span style="color:var(--rule-light);margin:0 0.1rem;">·</span>')}</div>`;
+    }
+
+    function searchFor(term) {
+        document.getElementById('searchInput').value = term;
+        performSearch(term);
+    }
+
+    function renderResults(docs, noMatch) {
+        const container = document.getElementById('resultsContainer');
+        const countSpan  = document.getElementById('resultCount');
+
+        if (docs.length === 0) {
+            if (noMatch) {
+                container.innerHTML = `<div class="empty">no matching files found</div>`;
+                countSpan.textContent = '0';
+            } else {
+                container.innerHTML = `<div class="empty">enter a search term to retrieve files</div>`;
+            }
+            return;
+        }
+
+        countSpan.textContent = docs.length;
+        container.innerHTML = docs.map(doc => `
+            <div class="file${readIds.has(doc.id) ? ' read' : ''}" data-id="${doc.id}">
+                <div class="file-header">
+                    <span class="file-type">${doc.type}</span>
+                    <span class="file-date">${doc.date}</span>
+                </div>
+                <div class="file-title">${doc.title}</div>
+                <div class="file-body">${doc.content}</div>
+                ${buildSeeAlso(doc.id)}
+            </div>
+        `).join('');
+
+        // Observe all unread cards
+        container.querySelectorAll('.file:not(.read)').forEach(card => {
+            readObserver.observe(card);
+        });
+    }
+
+    function updateUI() {
+        const count   = discoveredIds.size;
+        const total   = DOCUMENTS.length;
+        document.getElementById('discoveredCount').textContent = count;
+        document.getElementById('totalDocsSpan').textContent   = total;
+        document.getElementById('progressFill').style.width    = `${(count / total) * 100}%`;
+        document.getElementById('failedDisplay').innerHTML     =
+            failedSearches.length > 0
+                ? `"${failedSearches[0]}" — no results`
+                : '';
+    }
+
+    document.getElementById('searchBtn').addEventListener('click', () => {
+        performSearch(document.getElementById('searchInput').value);
+    });
+    document.getElementById('resetBtn').addEventListener('click', resetState);
+    document.getElementById('searchInput').addEventListener('keypress', e => {
+        if (e.key === 'Enter') performSearch(e.target.value);
+    });
+
+    updateUI();
+    renderResults([]);
+
+    // ── NOTEPAD ────────────────────────────────────────────
+
+    const notepad       = document.getElementById('notepad');
+    const notepadTA     = document.getElementById('notepad-textarea');
+    const notepadStatus = document.getElementById('notepad-status');
+
+    const API = '/api/notepad';
+    let saveTimer = null;
+    let lastSaved = '';
+
+    function setStatus(msg) {
+        notepadStatus.textContent = msg;
+    }
+
+    async function loadNotepad() {
+        setStatus('loading…');
+        try {
+            const res = await fetch(API);
+            const { content } = await res.json();
+            notepadTA.value = content ?? '';
+            lastSaved = notepadTA.value;
+            setStatus('');
+        } catch {
+            // Fall back to sessionStorage if function unreachable (local dev)
+            const saved = sessionStorage.getItem('yunus_notepad');
+            if (saved) notepadTA.value = saved;
+            setStatus('offline');
+        }
+    }
+
+    async function saveNotepad(content) {
+        setStatus('saving…');
+        try {
+            await fetch(API, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ content })
+            });
+            lastSaved = content;
+            setStatus('saved');
+            setTimeout(() => { if (notepadStatus.textContent === 'saved') setStatus(''); }, 2000);
+        } catch {
+            sessionStorage.setItem('yunus_notepad', content);
+            setStatus('offline');
+        }
+    }
+
+    notepadTA.addEventListener('input', () => {
+        setStatus('…');
+        clearTimeout(saveTimer);
+        saveTimer = setTimeout(() => saveNotepad(notepadTA.value), 1000);
+    });
+
+    document.getElementById('notepadBtn').addEventListener('click', () => {
+        notepad.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        notepadTA.focus();
+    });
+
+    document.getElementById('closeNotepadBtn').addEventListener('click', () => {
+        notepad.classList.remove('active');
+        document.body.style.overflow = '';
+    });
+
+    document.getElementById('clearNotepadBtn').addEventListener('click', async () => {
+        if (notepadTA.value.trim() === '') return;
+        if (confirm('Clear all notes?')) {
+            notepadTA.value = '';
+            await saveNotepad('');
+        }
+    });
+
+    // Click outside inner panel to close
+    notepad.addEventListener('click', e => {
+        if (e.target === notepad) {
+            notepad.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    });
+
+    // ESC closes notepad too
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && notepad.classList.contains('active')) {
+            notepad.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    });
+
+    loadNotepad();
+
+    // ── CORKBOARD ──────────────────────────────────────────
+
+    const cork = document.getElementById('corkboard');
+    const corkCardsLayer = document.getElementById('cork-cards-layer');
+    const corkSvg = document.getElementById('cork-svg');
+
+    let connectMode = false;
+    let connectSrc = null;         // id of card being connected from
+    let userStrings = [];          // [{from, to}] user-drawn strings
+    let cardPositions = {};        // {id: {x, y}}
+    let dragState = null;
+    let panState = null;
+    let boardOffset = { x: 0, y: 0 };
+
+    // Deterministic scatter so layout is stable between openings
+    function getInitialPos(id, index, total) {
+        if (cardPositions[id]) return cardPositions[id];
+        const cols = Math.ceil(Math.sqrt(total));
+        const col = index % cols;
+        const row = Math.floor(index / cols);
+        const cw = cork.offsetWidth  || window.innerWidth;
+        const ch = (cork.offsetHeight || window.innerHeight) - 44;
+        const cellW = (cw - 60) / cols;
+        const cellH = (ch - 60) / Math.ceil(total / cols);
+        const jitterX = ((index * 37 + 13) % 40) - 20;
+        const jitterY = ((index * 53 + 7)  % 40) - 20;
+        return {
+            x: 30 + col * cellW + (cellW - 180) / 2 + jitterX,
+            y: 30 + row * cellH + (cellH - 70)  / 2 + jitterY
+        };
+    }
+
+    function cardCentre(id) {
+        const pos = cardPositions[id];
+        if (!pos) return null;
+        return { x: pos.x + 90 + boardOffset.x, y: pos.y + 35 + boardOffset.y };
+    }
+
+    function redrawStrings() {
+        // Clear existing string lines (keep defs if any)
+        corkSvg.innerHTML = '';
+
+        // Draw a preview line if in connect mode and src selected
+        // (handled via mousemove on canvas)
+
+        userStrings.forEach(({ from, to }) => {
+            const a = cardCentre(from);
+            const b = cardCentre(to);
+            if (!a || !b) return;
+            // Slight droop via quadratic bezier
+            const mx = (a.x + b.x) / 2;
+            const my = (a.y + b.y) / 2 + Math.min(30, Math.hypot(b.x - a.x, b.y - a.y) * 0.08);
+            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            path.setAttribute('d', `M${a.x},${a.y} Q${mx},${my} ${b.x},${b.y}`);
+            path.setAttribute('stroke', '#c8180a');
+            path.setAttribute('stroke-width', '1.5');
+            path.setAttribute('fill', 'none');
+            path.setAttribute('opacity', '0.75');
+            path.setAttribute('stroke-linecap', 'round');
+            corkSvg.appendChild(path);
+        });
+    }
+
+    // Preview line while hovering/touching in connect mode
+    let previewLine = null;
+    function updatePreview(e) {
+        if (!connectMode || !connectSrc) return;
+        const rect = cork.getBoundingClientRect();
+        // SVG is positioned from the top of the canvas (below 44px header)
+        // but its coordinate space starts at 0, same as the viewport-relative SVG
+        const mx = e.clientX - rect.left;
+        const my = e.clientY - rect.top - 44;
+        const a = cardCentre(connectSrc);
+        if (!a) return;
+        // Adjust a to SVG space (cardCentre includes boardOffset but not the rect offset)
+        const ax = a.x - boardOffset.x + boardOffset.x; // = a.x (already in SVG canvas coords)
+        const ay = a.y - boardOffset.y + boardOffset.y; // = a.y
+        if (!previewLine) {
+            previewLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            previewLine.setAttribute('stroke', '#c8a86a');
+            previewLine.setAttribute('stroke-width', '1.5');
+            previewLine.setAttribute('stroke-dasharray', '5 4');
+            previewLine.setAttribute('opacity', '0.65');
+            corkSvg.appendChild(previewLine);
+        }
+        previewLine.setAttribute('x1', a.x);
+        previewLine.setAttribute('y1', a.y);
+        previewLine.setAttribute('x2', mx);
+        previewLine.setAttribute('y2', my);
+    }
+
+    function clearPreview() {
+        if (previewLine) { previewLine.remove(); previewLine = null; }
+    }
+
+    function buildCorkboard() {
+        corkCardsLayer.innerHTML = '';
+        corkSvg.innerHTML = '';
+        previewLine = null;
+
+        const discovered = DOCUMENTS.filter(d => discoveredIds.has(d.id));
+        const total = discovered.length;
+
+        discovered.forEach((doc, index) => {
+            if (!cardPositions[doc.id]) {
+                cardPositions[doc.id] = getInitialPos(doc.id, index, total);
+            }
+            const pos = cardPositions[doc.id];
+
+            const card = document.createElement('div');
+            card.className = 'cork-card';
+            card.dataset.id = doc.id;
+            card.style.left = pos.x + 'px';
+            card.style.top  = pos.y + 'px';
+            // Slight random rotation per card
+            const rot = ((doc.id.charCodeAt(0) + doc.id.length) % 7) - 3;
+            card.style.transform = `rotate(${rot * 0.6}deg)`;
+
+            card.innerHTML = `
+                <div class="cork-pin"></div>
+                <div class="cork-card-type">${doc.type}</div>
+                <div class="cork-card-title">${doc.title}</div>
+            `;
+
+            // Drag / click logic
+            card.addEventListener('mousedown', e => {
+                if (connectMode) {
+                    e.stopPropagation();
+                    handleCardClick(doc.id, card);
+                    return;
+                }
+                e.preventDefault();
+                const startX = e.clientX - pos.x - boardOffset.x;
+                const startY = e.clientY - pos.y - boardOffset.y;
+                dragState = { id: doc.id, card, startX, startY, moved: false, downX: e.clientX, downY: e.clientY };
+                card.style.zIndex = 50;
+            });
+
+            card.addEventListener('mouseup', e => {
+                if (connectMode) return;
+                if (dragState && dragState.id === doc.id && !dragState.moved) {
+                    openDocViewer(doc.id);
+                }
+            });
+
+            // Touch support
+            card.addEventListener('touchstart', e => {
+                const t = e.touches[0];
+                if (connectMode) {
+                    // In connect mode: don't start drag, just block pan and show preview
+                    e.stopPropagation();
+                    e.preventDefault();
+                    return;
+                }
+                e.preventDefault();
+                e.stopPropagation();
+                const startX = t.clientX - pos.x - boardOffset.x;
+                const startY = t.clientY - pos.y - boardOffset.y;
+                dragState = { id: doc.id, card, startX, startY, moved: false, downX: t.clientX, downY: t.clientY };
+                card.style.zIndex = 50;
+            }, { passive: false });
+
+            card.addEventListener('touchend', e => {
+                if (connectMode) {
+                    // Fire connect on touchend to avoid conflict with drag detection
+                    e.stopPropagation();
+                    e.preventDefault();
+                    handleCardClick(doc.id, card);
+                    return;
+                }
+                if (dragState && dragState.id === doc.id && !dragState.moved) {
+                    openDocViewer(doc.id);
+                }
+            }, { passive: false });
+
+            if (connectMode) card.classList.add('connecting-mode');
+
+            corkCardsLayer.appendChild(card);
+        });
+
+        redrawStrings();
+    }
+
+    function handleCardClick(id, card) {
+        if (!connectSrc) {
+            // Select as source
+            connectSrc = id;
+            card.classList.add('selected-src');
+        } else if (connectSrc === id) {
+            // Deselect
+            connectSrc = null;
+            card.classList.remove('selected-src');
+            clearPreview();
+        } else {
+            // Draw string
+            const already = userStrings.find(
+                s => (s.from === connectSrc && s.to === id) || (s.from === id && s.to === connectSrc)
+            );
+            if (!already) {
+                userStrings.push({ from: connectSrc, to: id });
+            }
+            // Clear source
+            const srcCard = corkCardsLayer.querySelector(`[data-id="${connectSrc}"]`);
+            if (srcCard) srcCard.classList.remove('selected-src');
+            connectSrc = null;
+            clearPreview();
+            redrawStrings();
+        }
+    }
+
+    // Global mouse events for drag and preview
+    document.addEventListener('mousemove', e => {
+        if (connectMode) { updatePreview(e); return; }
+        if (!dragState) return;
+        const { id, card, startX, startY } = dragState;
+        const dx = e.clientX - dragState.downX;
+        const dy = e.clientY - dragState.downY;
+        if (Math.abs(dx) > 4 || Math.abs(dy) > 4) dragState.moved = true;
+        if (!dragState.moved) return;
+        const x = e.clientX - startX - boardOffset.x;
+        const y = e.clientY - startY - boardOffset.y;
+        cardPositions[id] = { x, y };
+        card.style.left = x + 'px';
+        card.style.top  = y + 'px';
+        redrawStrings();
+    });
+
+    document.addEventListener('mouseup', () => {
+        if (dragState) { dragState.card.style.zIndex = ''; dragState = null; }
+    });
+
+    // Global touch events for card dragging
+    document.addEventListener('touchmove', e => {
+        // In connect mode: update preview line toward finger position
+        if (connectMode) {
+            if (connectSrc && e.touches.length === 1) {
+                e.preventDefault();
+                const t = e.touches[0];
+                const rect = cork.getBoundingClientRect();
+                const fakeEv = { clientX: t.clientX, clientY: t.clientY };
+                updatePreview(fakeEv);
+            }
+            return;
+        }
+        if (!dragState) return;
+        e.preventDefault();
+        const t = e.touches[0];
+        const { id, card, startX, startY } = dragState;
+        const dx = t.clientX - dragState.downX;
+        const dy = t.clientY - dragState.downY;
+        if (Math.abs(dx) > 6 || Math.abs(dy) > 6) dragState.moved = true;
+        if (!dragState.moved) return;
+        const x = t.clientX - startX - boardOffset.x;
+        const y = t.clientY - startY - boardOffset.y;
+        cardPositions[id] = { x, y };
+        card.style.left = x + 'px';
+        card.style.top  = y + 'px';
+        redrawStrings();
+    }, { passive: false });
+
+    document.addEventListener('touchend', () => {
+        if (dragState) { dragState.card.style.zIndex = ''; dragState = null; }
+    });
+
+    // Board pan via touch on canvas background (when not dragging a card)
+    function applyBoardOffset() {
+        corkCardsLayer.style.transform = `translate(${boardOffset.x}px, ${boardOffset.y}px)`;
+        corkSvg.style.transform        = `translate(${boardOffset.x}px, ${boardOffset.y}px)`;
+    }
+
+    const corkCanvas = document.getElementById('cork-canvas');
+    corkCanvas.addEventListener('touchstart', e => {
+        if (dragState || connectMode) return;
+        if (e.target !== corkCanvas && e.target !== corkSvg) return;
+        const t = e.touches[0];
+        panState = { startX: t.clientX - boardOffset.x, startY: t.clientY - boardOffset.y };
+    }, { passive: true });
+
+    corkCanvas.addEventListener('touchmove', e => {
+        if (!panState) return;
+        e.preventDefault();
+        const t = e.touches[0];
+        boardOffset.x = t.clientX - panState.startX;
+        boardOffset.y = t.clientY - panState.startY;
+        applyBoardOffset();
+    }, { passive: false });
+
+    corkCanvas.addEventListener('touchend', () => { panState = null; });
+
+    // Connect mode toggle
+    document.getElementById('connectModeBtn').addEventListener('click', () => {
+        connectMode = !connectMode;
+        connectSrc = null;
+        clearPreview();
+        document.getElementById('connectModeBtn').classList.toggle('active', connectMode);
+        document.getElementById('cork-hint').textContent = connectMode
+            ? 'tap a card · drag to preview · tap another to connect'
+            : 'drag cards · pan board · use connect mode to draw strings';
+        corkCardsLayer.querySelectorAll('.cork-card').forEach(c => {
+            c.classList.toggle('connecting-mode', connectMode);
+        });
+    });
+
+    // Clear strings
+    document.getElementById('clearStringsBtn').addEventListener('click', () => {
+        userStrings = [];
+        connectSrc = null;
+        clearPreview();
+        redrawStrings();
+    });
+
+    // Open/close
+    document.getElementById('corkboardBtn').addEventListener('click', () => {
+        if (discoveredIds.size === 0) return;
+        boardOffset = { x: 0, y: 0 };
+        applyBoardOffset();
+        buildCorkboard();
+        cork.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    });
+
+    document.getElementById('closeCorkboard').addEventListener('click', () => {
+        cork.classList.remove('active');
+        document.body.style.overflow = '';
+        connectMode = false;
+        connectSrc = null;
+        clearPreview();
+        document.getElementById('connectModeBtn').classList.remove('active');
+    });
+
+    // ── DOC VIEWER ─────────────────────────────────────────
+
+    const docViewer      = document.getElementById('doc-viewer');
+    const docViewerType  = document.getElementById('doc-viewer-type');
+    const docViewerDate  = document.getElementById('doc-viewer-date');
+    const docViewerTitle = document.getElementById('doc-viewer-title');
+    const docViewerBody  = document.getElementById('doc-viewer-body');
+
+    function openDocViewer(id) {
+        const doc = DOCUMENTS.find(d => d.id === id);
+        if (!doc) return;
+        docViewerType.textContent  = doc.type;
+        docViewerDate.textContent  = doc.date;
+        docViewerTitle.textContent = doc.title;
+        docViewerBody.innerHTML    = doc.content;
+        docViewer.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeDocViewer() {
+        docViewer.classList.remove('active');
+        // Only restore scroll if corkboard is still open
+        if (!cork.classList.contains('active')) {
+            document.body.style.overflow = '';
+        }
+    }
+
+    document.getElementById('doc-viewer-close').addEventListener('click', closeDocViewer);
+    docViewer.addEventListener('click', e => { if (e.target === docViewer) closeDocViewer(); });
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && docViewer.classList.contains('active')) closeDocViewer();
+        else if (e.key === 'Escape' && cork.classList.contains('active')) {
+            document.getElementById('closeCorkboard').click();
+        }
+    });
+
+</script>
+</body>
+</html>
