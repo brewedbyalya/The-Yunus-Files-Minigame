@@ -72,17 +72,16 @@
             background: var(--rule);
         }
 
-        /* Coffee stain — positioned bottom-right of header, bleeds onto search */
+        /* Coffee stains — scattered across the page */
         .coffee-stain {
             position: absolute;
-            bottom: -38px;
-            right: 18px;
-            width: 90px;
-            height: 90px;
             pointer-events: none;
             z-index: 10;
-            opacity: 0.55;
         }
+        .stain-1 { bottom: -38px; right: 18px;  width: 90px;  height: 90px;  opacity: 0.52; }
+        .stain-2 { top: 8px;     left: -12px;   width: 55px;  height: 55px;  opacity: 0.35; transform: rotate(22deg); }
+        .stain-3 { bottom: -20px; right: 120px; width: 38px;  height: 34px;  opacity: 0.28; transform: rotate(-8deg); }
+        .stain-4 { top: 30px;    right: 60px;   width: 22px;  height: 20px;  opacity: 0.22; }
 
         .header-eyebrow {
             font-family: 'IBM Plex Mono', monospace;
@@ -238,9 +237,24 @@
             border-left: 3px solid var(--rule);
             margin-bottom: 1.5rem;
             background: var(--paper-warm);
+            background-image:
+                repeating-linear-gradient(
+                    transparent, transparent 27px,
+                    rgba(180,160,120,0.1) 27px, rgba(180,160,120,0.1) 28px
+                );
             transition: border-color 0.15s, box-shadow 0.15s;
             position: relative;
             box-shadow: 2px 2px 0 rgba(0,0,0,0.05);
+        }
+
+        /* Aged inner edge */
+        .file::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            box-shadow: inset 0 0 12px rgba(100,70,30,0.1), inset 0 0 3px rgba(80,50,20,0.08);
+            z-index: 0;
         }
 
         /* Folded corner */
@@ -252,7 +266,7 @@
             border-style: solid;
             border-width: 0 14px 14px 0;
             border-color: transparent var(--paper) transparent transparent;
-            z-index: 1;
+            z-index: 2;
         }
 
         .file:last-child { margin-bottom: 0; }
@@ -270,23 +284,29 @@
         .file-header {
             padding: 0.4rem 1.2rem 0.4rem 0.875rem;
             background: var(--paper-off);
+            background-image: repeating-linear-gradient(
+                transparent, transparent 27px,
+                rgba(160,140,100,0.12) 27px, rgba(160,140,100,0.12) 28px
+            );
             border-bottom: 1px solid var(--rule-light);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: relative;
+            z-index: 1;
         }
 
         .file-type {
             font-family: 'IBM Plex Mono', monospace;
-            font-size: 0.63rem;
+            font-size: 0.6rem;
             color: var(--accent);
             text-transform: uppercase;
-            letter-spacing: 0.08em;
+            letter-spacing: 0.1em;
         }
 
         .file-date {
             font-family: 'IBM Plex Mono', monospace;
-            font-size: 0.63rem;
+            font-size: 0.6rem;
             color: var(--ink-faint);
         }
 
@@ -296,6 +316,8 @@
             padding: 0.75rem 0.875rem 0.3rem;
             color: var(--ink);
             letter-spacing: -0.01em;
+            position: relative;
+            z-index: 1;
         }
 
         .file-body {
@@ -303,6 +325,8 @@
             font-size: 0.92rem;
             line-height: 1.65;
             color: var(--ink);
+            position: relative;
+            z-index: 1;
         }
 
         .file-body p { margin-bottom: 0.65rem; }
@@ -577,21 +601,60 @@
             position: absolute;
             width: 180px;
             background: #f5edd8;
+            background-image:
+                repeating-linear-gradient(
+                    transparent, transparent 23px,
+                    rgba(180,160,120,0.15) 23px, rgba(180,160,120,0.15) 24px
+                );
             border: 1px solid #c8b48a;
-            box-shadow: 2px 3px 10px rgba(0,0,0,0.45), 0 1px 3px rgba(0,0,0,0.3);
+            box-shadow: 3px 4px 14px rgba(0,0,0,0.5), 0 1px 3px rgba(0,0,0,0.3);
             cursor: grab;
             user-select: none;
             transition: box-shadow 0.15s;
+            /* NO overflow:hidden — clips pins */
         }
         .cork-card:active { cursor: grabbing; }
         .cork-card.selected-src {
-            box-shadow: 0 0 0 2px #c8a86a, 2px 3px 12px rgba(0,0,0,0.5);
+            box-shadow: 0 0 0 2px #c8a86a, 3px 4px 14px rgba(0,0,0,0.55);
         }
-        .cork-card.connecting-mode {
-            cursor: crosshair;
-        }
+        .cork-card.connecting-mode { cursor: crosshair; }
         .cork-card.connecting-mode:hover {
-            box-shadow: 0 0 0 2px rgba(200,168,106,0.6), 2px 3px 12px rgba(0,0,0,0.5);
+            box-shadow: 0 0 0 2px rgba(200,168,106,0.6), 3px 4px 14px rgba(0,0,0,0.55);
+        }
+
+        /* Inner wrapper clips stains without clipping pins */
+        .cork-card-inner {
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Aged edge — darkened border inside card */
+        .cork-card-inner::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            box-shadow: inset 0 0 8px rgba(100,70,30,0.18), inset 0 0 2px rgba(80,50,20,0.12);
+            z-index: 5;
+        }
+
+        /* Tape strip across top of some cards — added via JS */
+        .cork-tape {
+            position: absolute;
+            top: -4px;
+            width: 60px;
+            height: 18px;
+            background: rgba(220,200,150,0.45);
+            border: 1px solid rgba(180,160,110,0.3);
+            z-index: 4;
+            pointer-events: none;
+        }
+
+        /* Coffee stain on card — inside inner wrapper */
+        .cork-stain {
+            position: absolute;
+            pointer-events: none;
+            z-index: 1;
         }
 
         .cork-pin {
@@ -750,26 +813,25 @@
         }
         #doc-viewer.active { display: flex; }
 
+        /* ── BASE VIEWER ── */
         #doc-viewer-inner {
             width: min(680px, 94vw);
             max-height: 82vh;
             background: var(--paper-warm);
             background-image:
+                repeating-linear-gradient(transparent, transparent 27px, rgba(180,160,120,0.1) 27px, rgba(180,160,120,0.1) 28px),
                 radial-gradient(ellipse at 10% 5%, rgba(120,85,40,0.07) 0%, transparent 35%),
                 radial-gradient(ellipse at 90% 92%, rgba(100,70,30,0.06) 0%, transparent 30%),
                 url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJncmFpbi12aWV3ZXIiPjxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIwLjcyIiBudW1PY3RhdmVzPSI0IiBzdGl0Y2hUaWxlcz0ic3RpdGNoIi8+PGZlQ29sb3JNYXRyaXggdHlwZT0ic2F0dXJhdGUiIHZhbHVlcz0iMCIvPjwvZmlsdGVyPjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIiBmaWx0ZXI9InVybCgjZ3JhaW4tdmlld2VyKSIgb3BhY2l0eT0iMC4wNDUiLz48L3N2Zz4=");
             border: 1px solid var(--rule);
             border-top: 3px solid var(--ink);
             border-left: 3px solid var(--rule);
-            box-shadow:
-                0 20px 60px rgba(0,0,0,0.6),
-                0 4px 16px rgba(0,0,0,0.4),
-                inset 0 0 0 1px rgba(255,255,255,0.04);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 4px 16px rgba(0,0,0,0.4), inset 0 0 16px rgba(100,70,30,0.1), inset 0 0 3px rgba(80,50,20,0.08);
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            /* Slight tilt like a document pulled from a folder */
             transform: rotate(-0.25deg);
+            transition: background-color 0.2s;
         }
 
         #doc-viewer-header {
@@ -782,11 +844,7 @@
             flex-shrink: 0;
         }
 
-        #doc-viewer-meta {
-            display: flex;
-            gap: 0.75rem;
-            align-items: center;
-        }
+        #doc-viewer-meta { display: flex; gap: 0.75rem; align-items: center; }
 
         #doc-viewer-type {
             font-family: 'IBM Plex Mono', monospace;
@@ -842,7 +900,428 @@
         #doc-viewer-body p { margin-bottom: 0.65rem; }
         #doc-viewer-body p:last-child { margin-bottom: 0; }
 
-        /* ── FOOTER ── */
+        /* ════════════════════════════════════
+           PER-TYPE VIEWER TEMPLATES
+        ════════════════════════════════════ */
+
+        /* ── OFFICIAL (police doc, memo, personnel, shipping, inventory) ── */
+        #doc-viewer-inner.tpl-official {
+            background-color: #edeae0;
+            border-top: 5px solid #1c1612;
+            border-left: 1px solid var(--rule);
+        }
+        .tpl-official #doc-viewer-header {
+            background: #1c1612;
+            border-bottom: none;
+        }
+        .tpl-official #doc-viewer-type { color: #c8b890; }
+        .tpl-official #doc-viewer-date { color: rgba(200,184,144,0.6); }
+        .tpl-official #doc-viewer-close {
+            background: transparent;
+            border-color: rgba(200,184,144,0.3);
+            color: rgba(200,184,144,0.6);
+        }
+        .tpl-official #doc-viewer-close:hover { border-color: #c8b890; color: #c8b890; background: transparent; }
+        .tpl-official #doc-viewer-title {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.85rem;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            border-bottom: 2px solid #1c1612;
+            padding-bottom: 0.5rem;
+        }
+        .tpl-official #doc-viewer-body {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.78rem;
+            line-height: 1.7;
+        }
+        /* Stamp effect for official docs */
+        .tpl-official #doc-viewer-body::before {
+            content: 'OFFICIAL RECORD';
+            display: block;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.55rem;
+            letter-spacing: 0.2em;
+            color: rgba(107,36,36,0.18);
+            border: 2px solid rgba(107,36,36,0.15);
+            padding: 0.2rem 0.5rem;
+            display: inline-block;
+            transform: rotate(-2deg);
+            margin-bottom: 0.75rem;
+            margin-top: 0.25rem;
+        }
+
+        /* ── FORENSIC / EVIDENCE ── */
+        #doc-viewer-inner.tpl-forensic {
+            background-color: #f0f0ec;
+            background-image:
+                repeating-linear-gradient(transparent, transparent 23px, rgba(100,120,140,0.08) 23px, rgba(100,120,140,0.08) 24px),
+                url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJncmFpbi12aWV3ZXIiPjxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIwLjcyIiBudW1PY3RhdmVzPSI0IiBzdGl0Y2hUaWxlcz0ic3RpdGNoIi8+PGZlQ29sb3JNYXRyaXggdHlwZT0ic2F0dXJhdGUiIHZhbHVlcz0iMCIvPjwvZmlsdGVyPjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIiBmaWx0ZXI9InVybCgjZ3JhaW4tdmlld2VyKSIgb3BhY2l0eT0iMC4wMjUiLz48L3N2Zz4=");
+            border-top: 3px solid #3a4a3a;
+            border-left: 4px solid #3a4a3a;
+        }
+        .tpl-forensic #doc-viewer-header {
+            background: #3a4a3a;
+            border-bottom: none;
+        }
+        .tpl-forensic #doc-viewer-type { color: #a8c8a0; font-size: 0.58rem; }
+        .tpl-forensic #doc-viewer-date { color: rgba(168,200,160,0.6); }
+        .tpl-forensic #doc-viewer-close {
+            background: transparent;
+            border-color: rgba(168,200,160,0.3);
+            color: rgba(168,200,160,0.6);
+        }
+        .tpl-forensic #doc-viewer-close:hover { border-color: #a8c8a0; color: #a8c8a0; background: transparent; }
+        .tpl-forensic #doc-viewer-title {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.82rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #2a3a2a;
+            border-bottom: 1px solid #9aaa9a;
+        }
+        .tpl-forensic #doc-viewer-body {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.78rem;
+            line-height: 1.75;
+            color: #2a3020;
+            padding-left: 1.25rem;
+            border-left: 3px solid #c8d8c0;
+            margin-left: 0.875rem;
+        }
+
+        /* ── CORRESPONDENCE ── */
+        #doc-viewer-inner.tpl-correspondence {
+            background-color: #f4ede0;
+            border-top: 2px solid var(--rule);
+            border-left: 1px solid var(--rule);
+        }
+        .tpl-correspondence #doc-viewer-header {
+            background: #f4ede0;
+            border-bottom: 1px solid var(--rule-light);
+        }
+        .tpl-correspondence #doc-viewer-title {
+            font-size: 0.75rem;
+            font-family: 'IBM Plex Mono', monospace;
+            color: var(--ink-faint);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+        .tpl-correspondence #doc-viewer-body {
+            padding: 0.5rem 2.5rem 1.5rem 3rem;
+            font-size: 0.96rem;
+            line-height: 1.8;
+            color: var(--ink);
+            border-left: 1px solid rgba(180,150,110,0.25);
+            margin-left: 2rem;
+        }
+
+        /* ── INTERVIEW / TRANSCRIPT ── */
+        #doc-viewer-inner.tpl-interview {
+            background-color: #ede8d8;
+            background-image:
+                repeating-linear-gradient(transparent, transparent 30px, rgba(160,140,100,0.12) 30px, rgba(160,140,100,0.12) 31px);
+            border-left: 6px solid #9a8060;
+        }
+        .tpl-interview #doc-viewer-header {
+            background: var(--paper-off);
+            border-bottom: 2px solid #9a8060;
+        }
+        .tpl-interview #doc-viewer-title {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--ink-light);
+            border-bottom: 1px dashed var(--rule);
+        }
+        .tpl-interview #doc-viewer-body {
+            padding: 0.75rem 1rem 1.25rem 1rem;
+            font-size: 0.91rem;
+            line-height: 1.75;
+        }
+        /* Style blockquotes as transcript lines */
+        .tpl-interview #doc-viewer-body blockquote {
+            border-left: none;
+            padding-left: 0;
+            font-style: normal;
+            margin: 0.5rem 0 0.5rem 0;
+            color: var(--ink);
+        }
+        .tpl-interview #doc-viewer-body blockquote::before {
+            content: '— ';
+            color: var(--ink-faint);
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.75rem;
+        }
+
+        /* ── PRESS CLIPPING ── */
+        #doc-viewer-inner.tpl-press {
+            background-color: #f5f0e4;
+            background-image:
+                url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJncmFpbi12aWV3ZXIiPjxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIwLjcyIiBudW1PY3RhdmVzPSI0IiBzdGl0Y2hUaWxlcz0ic3RpdGNoIi8+PGZlQ29sb3JNYXRyaXggdHlwZT0ic2F0dXJhdGUiIHZhbHVlcz0iMCIvPjwvZmlsdGVyPjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIiBmaWx0ZXI9InVybCgjZ3JhaW4tdmlld2VyKSIgb3BhY2l0eT0iMC4wNSIvPjwvc3ZnPg==");
+            border-top: 4px double #1c1612;
+            border-bottom: 4px double #1c1612;
+            border-left: 1px solid var(--rule);
+        }
+        .tpl-press #doc-viewer-header {
+            background: #f5f0e4;
+            border-bottom: 2px solid #1c1612;
+        }
+        .tpl-press #doc-viewer-type {
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 0.72rem;
+            font-style: italic;
+            text-transform: none;
+            letter-spacing: 0;
+            color: var(--ink-mid);
+        }
+        .tpl-press #doc-viewer-title {
+            font-size: 1.4rem;
+            font-weight: 500;
+            border-bottom: 1px solid #1c1612;
+            font-family: 'EB Garamond', Georgia, serif;
+        }
+        .tpl-press #doc-viewer-body {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            column-count: 1;
+            color: var(--ink);
+        }
+
+        /* ── INVESTIGATION / RESEARCH / COMPILED ── */
+        #doc-viewer-inner.tpl-notebook {
+            background-color: #f0ecd8;
+            background-image:
+                /* Graph paper squares */
+                repeating-linear-gradient(rgba(160,140,100,0.12) 0px, transparent 1px, transparent 27px, rgba(160,140,100,0.12) 28px),
+                repeating-linear-gradient(90deg, rgba(160,140,100,0.08) 0px, transparent 1px, transparent 27px, rgba(160,140,100,0.08) 28px);
+            border-left: 4px solid #c88040;
+            border-top: 2px solid var(--rule);
+        }
+        .tpl-notebook #doc-viewer-header {
+            background: rgba(200,128,64,0.12);
+            border-bottom: 1px solid #c88040;
+        }
+        .tpl-notebook #doc-viewer-type { color: #c88040; }
+        .tpl-notebook #doc-viewer-title {
+            font-family: 'EB Garamond', Georgia, serif;
+            font-style: italic;
+            font-size: 1.1rem;
+            border-bottom: 1px dashed #c0a870;
+            color: var(--ink);
+        }
+        .tpl-notebook #doc-viewer-body {
+            font-size: 0.9rem;
+            line-height: 1.72;
+            color: var(--ink-mid);
+            padding-left: 1.1rem;
+        }
+        .tpl-notebook #doc-viewer-body ul { list-style: none; }
+        .tpl-notebook #doc-viewer-body ul li::before {
+            content: '→ ';
+            color: #c88040;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.75rem;
+        }
+
+        /* ── PERSONAL / NOTE / HANDWRITTEN ── */
+        #doc-viewer-inner.tpl-personal {
+            background-color: #f5eddc;
+            background-image:
+                repeating-linear-gradient(transparent, transparent 31px, rgba(160,130,90,0.14) 31px, rgba(160,130,90,0.14) 32px);
+            border-top: 2px solid var(--rule);
+            border-left: 28px solid #e8d8bc;
+        }
+        .tpl-personal #doc-viewer-header {
+            background: #e8d8bc;
+            border-bottom: 1px solid #d0c0a0;
+            margin-left: -28px;
+            padding-left: calc(0.875rem + 28px);
+        }
+        .tpl-personal #doc-viewer-title {
+            font-style: italic;
+            font-size: 1rem;
+            color: var(--ink-light);
+            border-bottom: 1px solid rgba(180,150,110,0.3);
+            margin-left: -28px;
+            padding-left: calc(0.875rem + 28px);
+        }
+        .tpl-personal #doc-viewer-body {
+            font-size: 0.95rem;
+            line-height: 1.85;
+            color: var(--ink);
+            padding-left: calc(0.875rem);
+            margin-left: 0;
+        }
+        /* Red margin line for notebook left edge */
+        .tpl-personal #doc-viewer-body::before {
+            content: '';
+            position: absolute;
+            left: 28px;
+            top: 0; bottom: 0;
+            width: 1px;
+            background: rgba(180,60,60,0.2);
+            pointer-events: none;
+        }
+
+        /* ════════════════════════════════════
+           PER-TYPE FILE CARD STYLES
+        ════════════════════════════════════ */
+
+        /* Official — police, memo, personnel, shipping, inventory */
+        .file.type-official {
+            border-left-color: #1c1612;
+            background-color: #edeae0;
+        }
+        .file.type-official .file-header {
+            background: #1c1612;
+        }
+        .file.type-official .file-type { color: #c8b890; }
+        .file.type-official .file-date { color: rgba(200,184,144,0.55); }
+        .file.type-official .file-title {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.82rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        .file.type-official .file-body {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.76rem;
+            line-height: 1.7;
+        }
+
+        /* Forensic */
+        .file.type-forensic {
+            border-left-color: #3a4a3a;
+            background-color: #f0f0ec;
+        }
+        .file.type-forensic .file-header { background: #3a4a3a; }
+        .file.type-forensic .file-type { color: #a8c8a0; }
+        .file.type-forensic .file-date { color: rgba(168,200,160,0.6); }
+        .file.type-forensic .file-title {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #2a3a2a;
+        }
+        .file.type-forensic .file-body {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.76rem;
+            line-height: 1.75;
+            color: #2a3020;
+            border-left: 3px solid #c8d8c0;
+            padding-left: 0.75rem;
+            margin-left: 0.1rem;
+        }
+
+        /* Correspondence */
+        .file.type-correspondence {
+            border-left-color: #b09878;
+            background-color: #f4ede0;
+        }
+        .file.type-correspondence .file-header {
+            background: #f4ede0;
+            border-bottom-color: #d8c8a8;
+        }
+        .file.type-correspondence .file-type { color: #9a7a58; }
+        .file.type-correspondence .file-title { font-style: italic; }
+        .file.type-correspondence .file-body {
+            padding-left: 1.5rem;
+            border-left: 1px solid rgba(180,150,110,0.3);
+            margin-left: 0.875rem;
+            line-height: 1.8;
+        }
+
+        /* Interview */
+        .file.type-interview {
+            border-left-color: #9a8060;
+            border-left-width: 5px;
+            background-color: #ede8d8;
+        }
+        .file.type-interview .file-header { border-bottom: 2px solid #9a8060; }
+        .file.type-interview .file-type { color: #7a6040; }
+        .file.type-interview .file-title {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--ink-light);
+        }
+        .file.type-interview .file-body blockquote {
+            border-left: none;
+            padding-left: 0;
+            font-style: normal;
+            color: var(--ink);
+        }
+        .file.type-interview .file-body blockquote::before {
+            content: '— ';
+            color: var(--ink-faint);
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.72rem;
+        }
+
+        /* Press clipping */
+        .file.type-press {
+            border-left-color: var(--rule);
+            border-top: 3px double #1c1612;
+            background-color: #f5f0e4;
+        }
+        .file.type-press .file-header {
+            background: #f5f0e4;
+            border-bottom: 2px solid #1c1612;
+        }
+        .file.type-press .file-type {
+            font-family: 'EB Garamond', Georgia, serif;
+            font-style: italic;
+            text-transform: none;
+            letter-spacing: 0;
+            font-size: 0.78rem;
+            color: var(--ink-mid);
+        }
+        .file.type-press .file-title {
+            font-size: 1.15rem;
+            border-bottom: 1px solid #1c1612;
+            padding-bottom: 0.4rem;
+        }
+
+        /* Notebook — investigation, research, compiled */
+        .file.type-notebook {
+            border-left-color: #c88040;
+            border-left-width: 4px;
+            background-color: #f0ecd8;
+            background-image:
+                repeating-linear-gradient(rgba(160,140,100,0.1) 0px, transparent 1px, transparent 27px, rgba(160,140,100,0.1) 28px),
+                repeating-linear-gradient(90deg, rgba(160,140,100,0.06) 0px, transparent 1px, transparent 27px, rgba(160,140,100,0.06) 28px);
+        }
+        .file.type-notebook .file-header {
+            background: rgba(200,128,64,0.1);
+            border-bottom-color: #c88040;
+        }
+        .file.type-notebook .file-type { color: #c88040; }
+        .file.type-notebook .file-title { font-style: italic; }
+        .file.type-notebook .file-body ul { list-style: none; }
+        .file.type-notebook .file-body ul li::before {
+            content: '→ ';
+            color: #c88040;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.72rem;
+        }
+
+        /* Personal / handwritten */
+        .file.type-personal {
+            border-left-color: var(--rule);
+            background-color: #f5eddc;
+            background-image:
+                repeating-linear-gradient(transparent, transparent 31px, rgba(160,130,90,0.13) 31px, rgba(160,130,90,0.13) 32px);
+        }
+        .file.type-personal .file-header { background: #e8d8bc; border-bottom-color: #d0c0a0; }
+        .file.type-personal .file-type { color: #9a7858; }
+        .file.type-personal .file-title { font-style: italic; color: var(--ink-light); }
+        .file.type-personal .file-body { line-height: 1.85; }
         .footer {
             font-family: 'IBM Plex Mono', monospace;
             font-size: 0.6rem;
@@ -867,9 +1346,11 @@
             #cork-header { height: auto; min-height: 44px; flex-wrap: wrap; padding: 0.4rem 0.75rem; gap: 0.35rem; }
             #cork-hint { display: none; }
             #cork-controls { gap: 0.4rem; flex-wrap: wrap; justify-content: flex-end; }
-            .cork-ctrl-btn { font-size: 0.6rem; padding: 0.2rem 0.45rem; }
-            .cork-card { width: 140px; }
-            .cork-card-title { font-size: 0.76rem; }
+            .cork-ctrl-btn { font-size: 0.6rem; padding: 0.25rem 0.55rem; }
+            /* Bigger cards on mobile for easier tapping */
+            .cork-card { width: 160px; }
+            .cork-card-title { font-size: 0.8rem; padding: 0.4rem 0.6rem 0.55rem; }
+            .cork-card-type { font-size: 0.58rem; }
             #doc-viewer { align-items: flex-end; }
             #doc-viewer-inner { width: 100%; max-height: 92vh; border-left: none; border-right: none; border-bottom: none; border-radius: 0; }
             #notepad-inner { width: 100%; max-height: 90vh; }
@@ -883,29 +1364,62 @@
         <div class="header-eyebrow">case file · port of hidd · bahrain</div>
         <div class="header-title">The Yunus Files</div>
         <div class="header-sub">compiled 20xx – 20xx · not for distribution</div>
-        <!-- Coffee stain -->
-        <svg class="coffee-stain" viewBox="0 0 90 90" xmlns="http://www.w3.org/2000/svg">
+
+        <!-- Coffee stains -->
+        <svg class="coffee-stain stain-1" viewBox="0 0 90 90" xmlns="http://www.w3.org/2000/svg">
             <defs>
-                <filter id="stain-blur">
-                    <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="4" seed="8" result="noise"/>
-                    <feDisplacementMap in="SourceGraphic" in2="noise" scale="6" xChannelSelector="R" yChannelSelector="G"/>
-                </filter>
-                <radialGradient id="stain-grad" cx="50%" cy="50%" r="50%">
+                <filter id="sf1"><feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="4" seed="8" result="noise"/><feDisplacementMap in="SourceGraphic" in2="noise" scale="6" xChannelSelector="R" yChannelSelector="G"/></filter>
+                <radialGradient id="sg1" cx="50%" cy="50%" r="50%">
                     <stop offset="0%"   stop-color="#6b4c2a" stop-opacity="0.0"/>
                     <stop offset="60%"  stop-color="#5a3d1e" stop-opacity="0.08"/>
                     <stop offset="82%"  stop-color="#3d2810" stop-opacity="0.28"/>
                     <stop offset="92%"  stop-color="#2e1e0a" stop-opacity="0.38"/>
                     <stop offset="100%" stop-color="#1a1008" stop-opacity="0.12"/>
                 </radialGradient>
-                <radialGradient id="stain-inner" cx="48%" cy="52%" r="38%">
-                    <stop offset="0%"   stop-color="#7a5530" stop-opacity="0.04"/>
-                    <stop offset="100%" stop-color="#7a5530" stop-opacity="0.0"/>
+            </defs>
+            <g filter="url(#sf1)"><ellipse cx="45" cy="45" rx="40" ry="38" fill="url(#sg1)"/></g>
+        </svg>
+
+        <svg class="coffee-stain stain-2" viewBox="0 0 55 55" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <filter id="sf2"><feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="3" seed="3" result="noise"/><feDisplacementMap in="SourceGraphic" in2="noise" scale="5" xChannelSelector="R" yChannelSelector="G"/></filter>
+                <radialGradient id="sg2" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%"   stop-color="#6b4c2a" stop-opacity="0.0"/>
+                    <stop offset="65%"  stop-color="#4a3018" stop-opacity="0.06"/>
+                    <stop offset="84%"  stop-color="#3d2810" stop-opacity="0.32"/>
+                    <stop offset="93%"  stop-color="#2e1e0a" stop-opacity="0.4"/>
+                    <stop offset="100%" stop-color="#1a1008" stop-opacity="0.1"/>
                 </radialGradient>
             </defs>
-            <g filter="url(#stain-blur)">
-                <ellipse cx="45" cy="45" rx="40" ry="38" fill="url(#stain-grad)"/>
-                <ellipse cx="45" cy="45" rx="26" ry="24" fill="url(#stain-inner)"/>
-            </g>
+            <g filter="url(#sf2)"><ellipse cx="27" cy="27" rx="24" ry="22" fill="url(#sg2)"/></g>
+        </svg>
+
+        <svg class="coffee-stain stain-3" viewBox="0 0 38 34" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <filter id="sf3"><feTurbulence type="fractalNoise" baseFrequency="0.06" numOctaves="3" seed="17" result="noise"/><feDisplacementMap in="SourceGraphic" in2="noise" scale="4" xChannelSelector="R" yChannelSelector="G"/></filter>
+                <radialGradient id="sg3" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%"   stop-color="#6b4c2a" stop-opacity="0.0"/>
+                    <stop offset="70%"  stop-color="#5a3d1e" stop-opacity="0.05"/>
+                    <stop offset="86%"  stop-color="#3d2810" stop-opacity="0.25"/>
+                    <stop offset="95%"  stop-color="#2a1a08" stop-opacity="0.3"/>
+                    <stop offset="100%" stop-color="#1a1008" stop-opacity="0.08"/>
+                </radialGradient>
+            </defs>
+            <g filter="url(#sf3)"><ellipse cx="19" cy="17" rx="16" ry="14" fill="url(#sg3)"/></g>
+        </svg>
+
+        <svg class="coffee-stain stain-4" viewBox="0 0 22 20" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <filter id="sf4"><feTurbulence type="fractalNoise" baseFrequency="0.07" numOctaves="3" seed="5" result="noise"/><feDisplacementMap in="SourceGraphic" in2="noise" scale="3" xChannelSelector="R" yChannelSelector="G"/></filter>
+                <radialGradient id="sg4" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%"   stop-color="#6b4c2a" stop-opacity="0.0"/>
+                    <stop offset="68%"  stop-color="#4a3018" stop-opacity="0.04"/>
+                    <stop offset="85%"  stop-color="#3d2810" stop-opacity="0.22"/>
+                    <stop offset="94%"  stop-color="#2a1a08" stop-opacity="0.28"/>
+                    <stop offset="100%" stop-color="#1a1008" stop-opacity="0.07"/>
+                </radialGradient>
+            </defs>
+            <g filter="url(#sf4)"><ellipse cx="11" cy="10" rx="9" ry="8" fill="url(#sg4)"/></g>
         </svg>
     </div>
 
@@ -1075,8 +1589,8 @@
                 <div class="tag">personal correspondence · recovered from rahimi residence</div>
                 <p><strong>N —</strong></p>
                 <p>I  spent a year on this. He trusts me completely. He has no idea what he's worth.</p>
-                <p>His quirk makes him exceptional for what your partners need. Surveillance that leaves no record. Access that raises no flags. Birds go where people cant. To him, I'm his greatest mentor.</p>
-                <p>Beyond the quirk: he is young, unattached, without dependents, no record of dissent. He'll travel willingly if asked by someone he trusts. Hes been conditioned to trust me.</p>
+                <p>His quirk makes him exceptional for what your partners need... Birds go where people cant. A pretty face and good figure. To him, I'm his greatest mentor.</p>
+                <p>Beyond that: he is young, unattached, without dependents, no record of dissent. He'll travel willingly if asked by someone he trusts. Hes been conditioned to trust me.</p>
                 <p>The father is the complication. Khalid keeps pulling at the manifest figures. If that becomes untenable, I'll manage it separately.</p>
                 <p>As for my intentions: I haven't fully decided. Some things I want to keep.</p>
                 <p>— J.</p>
@@ -1866,6 +2380,27 @@
         performSearch(term);
     }
 
+    const TYPE_CLASS = {
+        'police document':   'type-official',
+        'internal memo':     'type-official',
+        'personnel':         'type-official',
+        'shipping record':   'type-official',
+        'inventory':         'type-official',
+        'forensic':          'type-forensic',
+        'evidence':          'type-forensic',
+        'correspondence':    'type-correspondence',
+        'interview':         'type-interview',
+        'press clipping':    'type-press',
+        'investigation note':'type-notebook',
+        'research note':     'type-notebook',
+        'compiled':          'type-notebook',
+        'compiled notes':    'type-notebook',
+        'note to self':      'type-personal',
+        'note':              'type-personal',
+        'personal notes':    'type-personal',
+        'personal':          'type-personal',
+    };
+
     function renderResults(docs, noMatch) {
         const container = document.getElementById('resultsContainer');
         const countSpan  = document.getElementById('resultCount');
@@ -1881,8 +2416,10 @@
         }
 
         countSpan.textContent = docs.length;
-        container.innerHTML = docs.map(doc => `
-            <div class="file${readIds.has(doc.id) ? ' read' : ''}" data-id="${doc.id}">
+        container.innerHTML = docs.map(doc => {
+            const typeClass = TYPE_CLASS[doc.type] || '';
+            return `
+            <div class="file${readIds.has(doc.id) ? ' read' : ''}${typeClass ? ' ' + typeClass : ''}" data-id="${doc.id}">
                 <div class="file-header">
                     <span class="file-type">${doc.type}</span>
                     <span class="file-date">${doc.date}</span>
@@ -1891,7 +2428,7 @@
                 <div class="file-body">${doc.content}</div>
                 ${buildSeeAlso(doc.id)}
             </div>
-        `).join('');
+        `}).join('');
 
         // Observe all unread cards
         container.querySelectorAll('.file:not(.read)').forEach(card => {
@@ -2051,27 +2588,43 @@
     }
 
     function redrawStrings() {
-        // Clear existing string lines (keep defs if any)
         corkSvg.innerHTML = '';
-
-        // Draw a preview line if in connect mode and src selected
-        // (handled via mousemove on canvas)
 
         userStrings.forEach(({ from, to }) => {
             const a = cardCentre(from);
             const b = cardCentre(to);
             if (!a || !b) return;
-            // Slight droop via quadratic bezier
             const mx = (a.x + b.x) / 2;
             const my = (a.y + b.y) / 2 + Math.min(30, Math.hypot(b.x - a.x, b.y - a.y) * 0.08);
+
+            // String
             const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
             path.setAttribute('d', `M${a.x},${a.y} Q${mx},${my} ${b.x},${b.y}`);
             path.setAttribute('stroke', '#c8180a');
             path.setAttribute('stroke-width', '1.5');
             path.setAttribute('fill', 'none');
-            path.setAttribute('opacity', '0.75');
+            path.setAttribute('opacity', '0.8');
             path.setAttribute('stroke-linecap', 'round');
             corkSvg.appendChild(path);
+
+            // Nail heads at each end
+            [a, b].forEach(pt => {
+                const nail = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                nail.setAttribute('cx', pt.x);
+                nail.setAttribute('cy', pt.y);
+                nail.setAttribute('r', '3.5');
+                nail.setAttribute('fill', '#2a1a08');
+                nail.setAttribute('opacity', '0.7');
+                corkSvg.appendChild(nail);
+
+                // Nail shine
+                const shine = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                shine.setAttribute('cx', pt.x - 1);
+                shine.setAttribute('cy', pt.y - 1);
+                shine.setAttribute('r', '1.2');
+                shine.setAttribute('fill', 'rgba(255,255,255,0.35)');
+                corkSvg.appendChild(shine);
+            });
         });
     }
 
@@ -2126,14 +2679,66 @@
             card.dataset.id = doc.id;
             card.style.left = pos.x + 'px';
             card.style.top  = pos.y + 'px';
-            // Slight random rotation per card
-            const rot = ((doc.id.charCodeAt(0) + doc.id.length) % 7) - 3;
-            card.style.transform = `rotate(${rot * 0.6}deg)`;
+
+            // More varied rotation — seeded per card
+            const seed1 = doc.id.charCodeAt(0) + doc.id.length;
+            const seed2 = (doc.id.charCodeAt(doc.id.length - 1) || 0) * 3;
+            const rot = ((seed1 * 7 + seed2 * 3) % 18) - 9;
+            card.style.transform = `rotate(${rot * 0.55}deg)`;
+
+            // Deterministic "random" helpers
+            const h1 = (seed1 * 13 + seed2 * 7 + index * 11) % 100;
+            const h2 = (seed1 * 5  + seed2 * 17 + index * 3)  % 100;
+            const h3 = (seed1 * 19 + index * 29) % 100;
+
+            // Some cards get tape instead of a pin
+            const useTape = h3 < 30;
+            const pinColors = [
+                'radial-gradient(circle at 35% 35%, #e06060, #8b2020)',
+                'radial-gradient(circle at 35% 35%, #e0a060, #8b5020)',
+                'radial-gradient(circle at 35% 35%, #6080e0, #202a8b)',
+                'radial-gradient(circle at 35% 35%, #60c060, #208b20)',
+            ];
+            const pinColor = pinColors[seed1 % pinColors.length];
+
+            // Coffee stain — about 35% of cards get one
+            const hasStain = h1 < 35;
+            const stainSize = 28 + (h2 % 30);
+            const stainX = 10 + (h2 % 140);
+            const stainY = 15 + (h1 % 50);
+            const stainOpacity = (0.18 + (h2 % 25) / 100).toFixed(2);
+            const stainSeed = (seed1 + index) % 20;
+
+            // Card background variation — some more yellowed/aged
+            const cardBgs = [
+                '#f5edd8', '#f2e8d0', '#f7f0e0', '#ede0c4', '#f0e9d5'
+            ];
+            const cardBg = cardBgs[seed1 % cardBgs.length];
+            card.style.background = cardBg;
 
             card.innerHTML = `
-                <div class="cork-pin"></div>
-                <div class="cork-card-type">${doc.type}</div>
-                <div class="cork-card-title">${doc.title}</div>
+                ${useTape
+                    ? `<div class="cork-tape" style="left:${30 + (h2 % 80)}px;transform:rotate(${((h1%10)-5)*0.8}deg)"></div>`
+                    : `<div class="cork-pin" style="background:${pinColor};left:${35 + (h2 % 90)}px;top:-8px;position:absolute;width:12px;height:12px;border-radius:50%;box-shadow:0 1px 3px rgba(0,0,0,0.5);z-index:3;"></div>`
+                }
+                <div class="cork-card-inner">
+                    ${hasStain ? `
+                    <svg class="cork-stain" style="width:${stainSize}px;height:${stainSize}px;left:${stainX}px;top:${stainY}px;opacity:${stainOpacity};" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <filter id="csf${index}"><feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="3" seed="${stainSeed}" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="5" xChannelSelector="R" yChannelSelector="G"/></filter>
+                            <radialGradient id="csg${index}" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%"   stop-color="#6b4c2a" stop-opacity="0.0"/>
+                                <stop offset="62%"  stop-color="#5a3d1e" stop-opacity="0.05"/>
+                                <stop offset="83%"  stop-color="#3d2810" stop-opacity="0.35"/>
+                                <stop offset="93%"  stop-color="#2e1e0a" stop-opacity="0.45"/>
+                                <stop offset="100%" stop-color="#1a1008" stop-opacity="0.1"/>
+                            </radialGradient>
+                        </defs>
+                        <g filter="url(#csf${index})"><ellipse cx="30" cy="30" rx="26" ry="24" fill="url(#csg${index})"/></g>
+                    </svg>` : ''}
+                    <div class="cork-card-type" style="position:relative;z-index:2;">${doc.type}</div>
+                    <div class="cork-card-title" style="position:relative;z-index:2;">${doc.title}</div>
+                </div>
             `;
 
             // Drag / click logic
@@ -2357,13 +2962,48 @@
         docViewerDate.textContent  = doc.date;
         docViewerTitle.textContent = doc.title;
         docViewerBody.innerHTML    = doc.content;
+
+        const inner = document.getElementById('doc-viewer-inner');
+
+        // Remove all template classes
+        inner.className = '';
+
+        // Map type → template
+        const tplMap = {
+            'police document':   'tpl-official',
+            'internal memo':     'tpl-official',
+            'personnel':         'tpl-official',
+            'shipping record':   'tpl-official',
+            'inventory':         'tpl-official',
+            'forensic':          'tpl-forensic',
+            'evidence':          'tpl-forensic',
+            'correspondence':    'tpl-correspondence',
+            'interview':         'tpl-interview',
+            'press clipping':    'tpl-press',
+            'investigation note':'tpl-notebook',
+            'research note':     'tpl-notebook',
+            'compiled':          'tpl-notebook',
+            'compiled notes':    'tpl-notebook',
+            'note to self':      'tpl-personal',
+            'note':              'tpl-personal',
+            'personal notes':    'tpl-personal',
+            'personal':          'tpl-personal',
+        };
+        const tpl = tplMap[doc.type] || '';
+        if (tpl) inner.classList.add(tpl);
+
+        // Per-doc tilt
+        const seed = doc.id.charCodeAt(0) + doc.id.length;
+        const tilt = (((seed * 7) % 10) - 5) * 0.08;
+        inner.style.transform = `rotate(${tilt}deg)`;
+
         docViewer.classList.add('active');
         document.body.style.overflow = 'hidden';
     }
 
     function closeDocViewer() {
         docViewer.classList.remove('active');
-        // Only restore scroll if corkboard is still open
+        document.getElementById('doc-viewer-inner').className = '';
         if (!cork.classList.contains('active')) {
             document.body.style.overflow = '';
         }
